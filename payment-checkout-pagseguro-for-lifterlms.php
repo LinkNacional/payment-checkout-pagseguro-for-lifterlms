@@ -27,7 +27,7 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die;
+    die;
 }
 
 /**
@@ -35,24 +35,36 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '1.0.0' );
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '1.0.0' );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION', '7.2.0' );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE', __FILE__ );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG', 'payment-checkout-pagseguro-for-lifterlms' );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_DIR', plugin_dir_path(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE) );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_URL', plugin_dir_url(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE) );
+
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME', plugin_basename(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE) );
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-payment-checkout-pagseguro-for-lifterlms-activator.php
  */
-function activate_payment_checkout_pagseguro_for_lifterlms() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-activator.php';
-	Payment_Checkout_Pagseguro_For_Lifterlms_Activator::activate();
+function activate_payment_checkout_pagseguro_for_lifterlms(): void {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-activator.php';
+    Payment_Checkout_Pagseguro_For_Lifterlms_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-payment-checkout-pagseguro-for-lifterlms-deactivator.php
  */
-function deactivate_payment_checkout_pagseguro_for_lifterlms() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-deactivator.php';
-	Payment_Checkout_Pagseguro_For_Lifterlms_Deactivator::deactivate();
+function deactivate_payment_checkout_pagseguro_for_lifterlms(): void {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-deactivator.php';
+    Payment_Checkout_Pagseguro_For_Lifterlms_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_payment_checkout_pagseguro_for_lifterlms' );
@@ -73,10 +85,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro
  *
  * @since    1.0.0
  */
-function run_payment_checkout_pagseguro_for_lifterlms() {
-
-	$plugin = new Payment_Checkout_Pagseguro_For_Lifterlms();
-	$plugin->run();
-
+function run_payment_checkout_pagseguro_for_lifterlms(): void {
+    $plugin = new Payment_Checkout_Pagseguro_For_Lifterlms();
+    $plugin->run();
 }
 run_payment_checkout_pagseguro_for_lifterlms();
