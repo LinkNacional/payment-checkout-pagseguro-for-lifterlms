@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe do Gateway PagSeguro.
+ * Class of PagSeguro Gateway.
  *
  * @since 1.0.0
  *
@@ -10,12 +10,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /*
- * Classe do Gateway PagSeguro.
+ * Class of PagSeguro Gateway.
  *
  * @since 1.0.0
  */
 if (class_exists('LLMS_Payment_Gateway')) {
-    final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms extends LLMS_Payment_Gateway {
+    final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway extends LLMS_Payment_Gateway {
         /**
          * A description of the payment proccess.
          *
@@ -26,24 +26,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
         protected $payment_instructions;
 
         /**
-         * API Key.
-         *
-         * @var string
-         *
-         * @since 1.0.0
-         */
-        protected $Api_key;
-
-        /**
-         * Token Key.
-         *
-         * @var string
-         *
-         * @since 1.0.0
-         */
-        protected $Token_key;
-
-        /**
          * Constructor.
          *
          * @since   1.0.0
@@ -52,9 +34,11 @@ if (class_exists('LLMS_Payment_Gateway')) {
          */
         public function __construct() {
             $this->set_variables();
-
-            require_once LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-checkout-pagseguro-for-lifterlms.php';
-            add_filter( 'llms_get_gateway_settings_fields', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Settings', 'checkout_pagseguro_settings_fields'), 10, 2 );
+            
+            if (is_admin()) {
+                require_once LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-checkout-pagseguro-for-lifterlms-settings.php';
+                add_filter( 'llms_get_gateway_settings_fields', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Settings', 'checkout_pagseguro_settings_fields'), 10, 2 );
+            }
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
@@ -76,12 +60,12 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since 1.0.0
          */
         public function before_view_order_table(): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
 
             // Get Payment Instruction value.
-            $paymentInstruction = $configs['paymentInstruction'];
+            $paymentInstruction = esc_html__($configs['paymentInstruction']);
 
-            $payInstTitle = esc_html__( 'Payment Instructions', 'payment-banking-slip-pix-for-lifterlms' );
+            $payInstTitle = esc_html__( 'Payment Instructions', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             // Make the HTML for present the Payment Instructions.
             $paymentInst = <<<HTML
@@ -127,26 +111,34 @@ HTML;
                     // Getting obj $order from key.
                     $objOrder = llms_get_order_by_key('#' . $orderId);
 
-                    // Getting qrCode and emvCode.
-                    $urlQrCode = $objOrder->pix_qrcode_image;
-                    $emvCode = $objOrder->pix_emv_code;
+                    // Getting URL for PagSeguro Checkout.
+                    $urlPagseguroCheckout = $objOrder->pix_qrcode_image; // TODO colocar URL
 
-                    $title = esc_html__('Payment Area', 'payment-banking-slip-pix-for-lifterlms');
-                    $buttonTitle = esc_html__('Copy code', 'payment-banking-slip-pix-for-lifterlms');
+                    $title = esc_html__('Payment Area', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $span = esc_html__('Secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+
+                    $buttonTitle = esc_html__('Pay', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $buttonTooltip = esc_html__('PagSeguro Checkout Payment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+
+                    $imgAlt = esc_html__('PagSeguro payment methods logos', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $imgTitle = esc_html__('This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+
+                    $descript = esc_html__('Pay with PagSeguro by clicking on button "Pay" right below', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
 
                     // Make the HTML for present the Payment Area.
                     $paymentArea = <<<HTML
-                    <h2>{$title}</h2> 
+                    <h2>{$title}</h2>
                     <div class="lkn_payment_area">
-                        <div class="lkn_qrcode_div"> 
-                        <img class="lkn_qrcode" src="{$urlQrCode}" alt="Imagem">
+                        <div id="lkn_secure_site_wrapper">
+                            <span class="llms-icon padlock"></span>
+                            <span>
+                                {$span}
+                            </span>
                         </div>
-                        <div class="lkn_emvcode_div"> 
-                        <textarea id="lkn_emvcode" readonly>{$emvCode}</textarea>
-                        <button id="lkn_copy_code" data-toggle="tooltip" data-placement="top" title="{$buttonTitle}">{$buttonTitle}</button>
-                        </div>
+                        <img class="logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="{$imgAlt}" title="{$imgTitle}">
+                        <p id="text_desc_pagseguro"><b>{$descript}</b></p>
+                        <a id="lkn_pagseguro_pay" href="{$urlPagseguroCheckout}" target="_blank"><button id="lkn_pagseguro_pay_button" data-toggle="tooltip" data-placement="top" title="{$buttonTooltip}">{$buttonTitle}</button></a>
                     </div>
-            
 HTML;
 
                     // Below is the verification of payment of the order, to present or not the Payment Area.
@@ -179,7 +171,7 @@ HTML;
          *
          */
         public function handle_payment_source_switch($order, $form_data = array()): void {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
 
             $previous_gateway = $order->get( 'payment_gateway' );
 
@@ -192,12 +184,12 @@ HTML;
             $order->set( 'gateway_source_id', '' );
             $order->set( 'gateway_subscription_id', '' );
 
-            // Process the switch Pix Order.
+            // Proccess the switch for PagSeguro Order.
             try {
-                $this->paghiper_process_order($order);
+                $this->lkn_pagseguro_proccess_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' pix gateway - switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagHiper - Pix');
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro Gateway - Switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
                 }
             }
 
@@ -217,39 +209,32 @@ HTML;
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
 
             // Make log.
             if ('yes' === $configs['logEnabled']) {
-                $this->log( 'Pix Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
+                $this->log( 'PagSeguro Gateway `handle_pending_order()` started', $order, $plan, $student, $coupon );
             }
-
-            // Pre validate CPF/CNPJ field.
-            $cpf_cnpj_info = $this->get_field_data();
 
             // Make error log.
-            if ( is_wp_error( $cpf_cnpj_info ) ) {
+            if ( ! is_ssl() ) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', $cpf_cnpj_info );
+                    $this->log( 'PagSeguro Gateway `handle_pending_order()` ended with validation errors' );
                 }
 
-                return llms_add_notice( $cpf_cnpj_info->get_error_message(), 'error' );
-            }
-
-            // CPF/CNPJ field validation
-            if ($this->cpf_cnpj_valido($this->get_field_data()['lkn_cpf_cnpj_input_paghiper']) != true) {
-                return false;
+                return llms_add_notice( __('Not secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG), 'error' );
             }
 
             $total = $order->get_price( 'total', array(), 'float' );
 
+            // TODO ver valor minimo PAGSEGURO.
             // Validate min value.
             if ( $total < 3.00 ) {
                 if ('yes' === $configs['logEnabled']) {
-                    $this->log( 'Pix Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
+                    $this->log( 'PagSeguro Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 3,00.', 'min transaction amount error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -268,7 +253,7 @@ HTML;
                             'source_description' => __( 'Free', 'lifterlms' ),
                             'transaction_id' => uniqid(),
                             'status' => 'llms-txn-succeeded',
-                            'payment_gateway' => 'pix',
+                            'payment_gateway' => 'pagseguro-v1',
                             'payment_type' => 'single',
                         )
                     );
@@ -277,11 +262,11 @@ HTML;
                 return $this->complete_transaction( $order );
             }
 
-            // Process Pix Order.
-            $this->paghiper_process_order($order);
+            // Process PagSeguro Order.
+            $this->lkn_pagseguro_proccess_order($order);
 
             /*
-             * Action triggered when a pix payment is due.
+             * Action triggered when a pagseguro payment is due.
              *
              * @hooked LLMS_Notification: manual_payment_due - 10
              *
@@ -304,15 +289,17 @@ HTML;
             llms_redirect_and_exit( $order->get_view_link() );
         }
 
+        // TODO arrumado daqui para cima.
+
         /**
-         * Process the pix order.
+         * Proccess the PagSeguro order.
          *
          * @since 1.0.0
          *
          * @param LLMS_Order $order order object
          */
-        public function paghiper_process_order($order) {
-            $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+        public function lkn_pagseguro_proccess_order($order) {
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
 
             // Get the order total price.
             $total = $order->get_price( 'total', array(), 'float' );
@@ -320,8 +307,9 @@ HTML;
             // Payer information
             $payerEmail = $order->billing_email;
             $payerName = $order->get_customer_name();
-            $payerCpfCnpj = $this->get_field_data()['lkn_cpf_cnpj_input_paghiper'];
             $payerPhone = $order->billing_phone;
+            $payerPhoneDDD = substr($payerPhone, 0, 2);
+            $payerPhone = substr($payerPhone, 2);
             $payerHStreet = $order->billing_address_1;
             $payerHNumber = $order->billing_address_2;
             $payerHCity = $order->billing_city;
@@ -330,41 +318,54 @@ HTML;
 
             // POST parameters
             $url = $configs['urlPix'];
-            $apiKey = $configs['apiKey'];
             $orderId = $order->get( 'id' );
-            $daysToDue = empty($configs['daysDueDate']) ? '1' : $configs['daysDueDate'];
             $notificationUrl = site_url() . '/wp-json/lkn-paghiper-pix-listener/v1/notification';
             $itemQtd = '1';
             $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
             $itemId = $order->product_id;
-            $itemPriceCents = number_format($total, 2, '', '');
+            $itemPrice = $total;
+            $returnUrl = home_url();
             $mediaType = 'application/json';
             $charSet = 'UTF-8';
 
             // Body
             $dataBody = array(
-                'apiKey' => $apiKey,
-                'order_id' => $orderId,
-                'payer_email' => $payerEmail,
-                'payer_name' => $payerName,
-                'payer_cpf_cnpj' => $payerCpfCnpj,
-                'payer_phone' => $payerPhone,
-                'payer_street' => $payerHStreet,
-                'payer_number' => $payerHNumber,
-                'payer_city' => $payerHCity,
-                'payer_state' => $payerHState,
-                'payer_zip_code' => $payerHZipCode,
-                'days_due_date' => $daysToDue,
-                'notification_url' => $notificationUrl,
-                'partners_id' => '14P9ZE4C',
-                'items' => array(
-                    array(
-                        'description' => $itemDesc,
-                        'quantity' => $itemQtd,
-                        'item_id' => $itemId,
-                        'price_cents' => $itemPriceCents,
+                'checkout' => array(
+                    'sender' => array(
+                        'name' => $payerName,
+                        'email' => $payerEmail,
+                        'phone' => array(
+                            'areaCode' => $payerPhoneDDD,
+                            'number' => $payerPhone
+                        ),
                     ),
-                ),
+                    'currency' => 'BRL',
+                    'items' => array(
+                        'item' => array(
+                            'id' => $itemId,
+                            'description' => $itemDesc,
+                            'amount' => $itemPrice,
+                            'quantity' => $itemQtd,
+                            'weight' => '0',
+                            'shippingCost' => '0'
+                        )
+                    ),
+                    'redirectURL' => $returnUrl,
+                    'extraAmount' => '0',
+                    'shipping' => array(
+                        'address' => array(
+                            'street' => $payerHStreet,
+                            'number' => $payerHNumber,
+                            'city' => $payerHCity,
+                            'state' => $payerHState,
+                            'country' => 'BRA',
+                            'postalCode' => $payerHZipCode
+                        ),
+                        'type' => '1',
+                        'cost' => '0',
+                        'addressRequired' => 'true'
+                    ),
+                )
             );
 
             // Header
@@ -403,7 +404,7 @@ HTML;
         }
 
         /**
-         * PagHiper Pix Request.
+         * PagSeguro Request.
          *
          * @since 1.0.0
          *
@@ -413,9 +414,9 @@ HTML;
          *
          * @return array
          */
-        public function lkn_paghiper_pix_request($dataBody, $dataHeader, $url) {
+        public function lkn_lifter_pagseguro_request($dataBody, $dataHeader, $url) {
             try {
-                $configs = Lkn_Payment_Banking_Slip_Pix_For_Lifterlms_Helper::get_configs('pix');
+                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
 
                 // Make the request args.
                 $args = array(
@@ -524,7 +525,7 @@ HTML;
                 // In our example, all fields are required.
                 if ( empty( $data[ $field ] ) ) {
                     // Translators: %s = field key.
-                    $errs->add( 'lkn_pix_checkout_required_field_' . $field, sprintf( __( 'Missing required field: CPF/CNPJ.', 'payment-banking-slip-pix-for-lifterlms' ), $field ) );
+                    $errs->add( 'lkn_pix_checkout_required_field_' . $field, sprintf( __( 'Missing required field: CPF/CNPJ.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ), $field ) );
                 }
             }
 
@@ -550,7 +551,7 @@ HTML;
             $cpf_cnpj_len = strlen($cpf_cnpj);
 
             if ($cpf_cnpj_len < 11 || $cpf_cnpj_len > 14) {
-                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect number of CPF/CNPJ digits: ' . $cpf_cnpj, 'cpf/cnpj validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
             }
 
             $cpf_equal_valid = 0;
@@ -577,11 +578,11 @@ HTML;
             }
 
             if ($cpf_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CPF: ' . $cpf_cnpj, 'cpf validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
             }
 
             if ($cnpj_equal_valid) {
-                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Incorrect and invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
             }
 
             if (11 == $cpf_cnpj_len) {
@@ -592,7 +593,7 @@ HTML;
                     }
                     $d = ((10 * $d) % 11) % 10;
                     if ($cpf_cnpj[$c] != $d) {
-                        return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf_cnpj, 'cpf validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                        return llms_add_notice( sprintf( __( 'Invalid CPF: ' . $cpf_cnpj, 'cpf validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
                     }
                 }
             } elseif (14 == $cpf_cnpj_len) {
@@ -612,7 +613,7 @@ HTML;
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[0]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
                 }
 
                 $tamanho += 1;
@@ -629,10 +630,10 @@ HTML;
 
                 $resultado = $soma % 11 < 2 ? 0 : 11 - ($soma % 11);
                 if ($resultado != $digitos[1]) {
-                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                    return llms_add_notice( sprintf( __( 'Invalid CNPJ: ' . $cpf_cnpj, 'cnpj validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
                 }
             } else {
-                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ: ' . $cpf_cnpj, 'cpf/cnpj validation error', 'payment-banking-slip-pix-for-lifterlms' ) ), 'error' );
+                return llms_add_notice( sprintf( __( 'Invalid CPF/CNPJ: ' . $cpf_cnpj, 'cpf/cnpj validation error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
             }
 
             return true;
@@ -651,28 +652,28 @@ HTML;
              *
              * @var string
              */
-            $this->admin_title = __( 'PagSeguro (v1)', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->admin_title = __( 'PagSeguro (v1)', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             /*
              * The description of the gateway displayed in admin panel on settings screens.
              *
              * @var string
              */
-            $this->admin_description = __( 'Allow customers to purchase courses and memberships using Pix.', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->admin_description = __( 'Allow customers to purchase courses and memberships using PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             /*
              * The title of the gateway.
              *
              * @var string
              */
-            $this->title = __( 'Pix', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->title = __( 'PagSeguro Checkout', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             /*
              * The description of the gateway displayed to users.
              *
              * @var string
              */
-            $this->description = __( 'Payment via pix', 'payment-banking-slip-pix-for-lifterlms' );
+            $this->description = __( 'Payment via PagSeguro checkout', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             $this->supports = array(
                 'checkout_fields' => true,

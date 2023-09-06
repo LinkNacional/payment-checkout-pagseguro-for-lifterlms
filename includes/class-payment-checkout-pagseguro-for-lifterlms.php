@@ -119,6 +119,16 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
          */
         require_once plugin_dir_path( __DIR__ ) . 'public/class-payment-checkout-pagseguro-for-lifterlms-public.php';
 
+        /**
+         * The file responsible for useful functions of plugin.
+         */
+        require_once plugin_dir_path( __DIR__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php';
+        
+        /**
+         * The class responsible for pagseguro gateway.
+         */
+        require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php';
+
         $this->loader = new Payment_Checkout_Pagseguro_For_Lifterlms_Loader();
     }
 
@@ -138,37 +148,32 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     }
 
     /**
-     * Adiciona o gateway PagSeguro como método de pagamento no LifterLMS.
-     * 
-     * @since 1.0.0
-     */
-    public function lifterlms_pagseguro_init_gateway(): void {
-        add_filter( 'lifterlms_payment_gateways', array($this, 'pagseguro_add_gateway') );
-    }
-
-    /**
      * Adiciona o PagSeguro à lista de gateways disponíveis.
      * 
      * @since 1.0.0
      */
-    public static function add_gateways($gateways) {
-        $gateways[] = 'Lkn_Payment_Checkout_PagSeguro_for_Lifterlms';
+    public static function lkn_pagseguro_add_gateway($gateways) {
+        $gateways[] = 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway';
 
         return $gateways;
     }
 
-    // TODO mover para a Helper
     /**
-     * Returns an instance of an gateway.
-     *
+     * Adiciona o gateway PagSeguro como método de pagamento no LifterLMS.
+     * 
      * @since 1.0.0
-     *
-     * @param string $gateway_id
-     *
-     * @return object gateway
      */
-    public static function get_gateways($gateway_id) {
-        return llms()->payment_gateways()->get_gateway_by_id( $gateway_id );
+    public function lkn_pagseguro_init_gateway(): void {
+        add_filter( 'lifterlms_payment_gateways', array($this, 'lkn_pagseguro_add_gateway') );
+    }
+
+    /**
+     * Add a link to settings page on plugin card.
+     * 
+     * @since 1.0.0
+     */
+    public function lkn_pagseguro_setup_settings_page(): void {
+        add_filter('plugin_action_links_' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME, array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lkn_pagseguro_plugin_row_meta'), 10, 2);
     }
 
     /**
@@ -183,6 +188,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
 
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action( 'init', $this, 'lkn_pagseguro_setup_settings_page');
     }
 
     /**
@@ -197,6 +203,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+        $this->loader->add_action('plugins_loaded', $this, 'lkn_pagseguro_init_gateway');
     }
 
     /**
