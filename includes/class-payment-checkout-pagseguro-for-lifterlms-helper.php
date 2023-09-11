@@ -159,10 +159,10 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
 
         if ('production' === $configs['env']) {
             $configs['urlQuery'] = 'https://pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.pagseguro.uol.com.br/';
+            $configs['urlPost'] = 'https://api.pagseguro.com/checkouts/';
         } else {
             $configs['urlQuery'] = 'https://sandbox.pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.sandbox.pagseguro.uol.com.br/';
+            $configs['urlPost'] = 'https://sandbox.api.pagseguro.com/checkouts/';
         }
 
         return $configs;
