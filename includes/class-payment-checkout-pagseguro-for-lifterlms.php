@@ -204,6 +204,29 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
         $this->loader->add_action('plugins_loaded', $this, 'lkn_pagseguro_init_gateway');
+        $this->lkn_lifter_pagseguro_init_listener_routes();
+    }
+
+    /**
+     * Add new routes for listen the PagSeguro payments/orders.
+     *
+     * @since 3.0.0
+     */
+    public function lkn_lifter_pagseguro_init_listener_routes(): void {
+        add_action('rest_api_init', array($this, 'lkn_lifter_pagseguro_register_routes'));
+    }   
+
+    /**
+     * Routes register.
+     *
+     * @since   3.0.0
+     */
+    public function lkn_lifter_pagseguro_register_routes(): void {
+        register_rest_route('lkn-lifter-pagseguro-listener/v1', '/notification', array(
+            'methods' => 'POST',
+            'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'lkn_lifter_listen_for_pagseguro'),
+            'permission_callback' => __return_empty_string(),
+        ));
     }
 
     /**

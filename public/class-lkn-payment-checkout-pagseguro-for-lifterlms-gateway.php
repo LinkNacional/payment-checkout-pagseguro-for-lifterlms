@@ -112,13 +112,15 @@ HTML;
                     $orderId = $order->get('id');
 
                     // Getting obj $order from key.
-                    $objOrder = llms_get_order_by_key('#' . $orderId);
+                    $pagseguroObjOrder = llms_get_order_by_key('#' . $orderId);
 
                     // Getting URL code for PagSeguro Checkout.
-                    $urlCodePagseguro = $objOrder->pagseguro_return_code;
+                    $urlCodePagseguro = $pagseguroObjOrder->pagcheckout_code;
+
+                    $teste = json_encode($pagseguroObjOrder);
 
                     // Build PagSeguro Checkout URL.
-                    $urlPagseguroCheckout = $configs['urlQuery'] . 'v1/checkout/payment.html?code=' . $urlCodePagseguro;
+                    $urlPagseguroCheckout = $configs['urlQuery'] . 'v2/checkout/payment.html?code=' . $urlCodePagseguro;
 
                     $title = esc_html__('Payment Area', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
                     $span = esc_html__('Secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
@@ -144,6 +146,7 @@ HTML;
                         <img class="logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="{$imgAlt}" title="{$imgTitle}">
                         <p id="text_desc_pagseguro"><b>{$descript}</b></p>
                         <a id="lkn_pagseguro_pay" href="{$urlPagseguroCheckout}" target="_blank"><button id="lkn_pagseguro_pay_button" data-toggle="tooltip" data-placement="top" title="{$buttonTooltip}">{$buttonTitle}</button></a>
+                        <p>{$teste}</p>
                     </div>
 HTML;
 
@@ -313,60 +316,51 @@ HTML;
             $payerPhone = $order->billing_phone;
             $payerPhoneDDD = substr($payerPhone, 0, 2);
             $payerPhone = substr($payerPhone, 2);
+            $payerCurrency = $order->currency;
+
+            if ('BRL' !== $payerCurrency) {
+                return llms_add_notice( 'PagSeguro Currency error: Only BRL payments are avaliable.', 'error' );
+            } else {
+                $itemPriceCents = number_format(filter_var($total, \FILTER_SANITIZE_NUMBER_FLOAT), 2, '.', '');
+            }
 
             // POST parameters
-            $url = $configs['urlPost'];
-            $orderId = $order->get( 'id' );
-            $notificationUrl = site_url() . '/wp-json/lkn-paghiper-pix-listener/v1/notification'; // TODO arrumar o listener e url.
-            $itemQtd = '1';
-            $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
-            $itemId = $order->product_id;
-            $itemPriceCents = number_format($total, 2, '', '');
             $tokenKey = $configs['tokenKey'];
+            $emailKey = $configs['email'];
+            $url = $configs['urlPost'] . 'v2/checkout?email=' . $emailKey . '&token=' . $tokenKey;
+            $orderId = $order->get( 'id' );
+            $notificationUrl = add_query_arg('lkn_pagseguro_orderid', $orderId, site_url() . '/wp-json/lkn-lifter-pagseguro-listener/v1/notification');
+            $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
+            $itemDesc = preg_replace(array('/(á|à|ã|â|ä)/', '/(Á|À|Ã|Â|Ä)/', '/(é|è|ê|ë)/', '/(É|È|Ê|Ë)/', '/(í|ì|î|ï)/', '/(Í|Ì|Î|Ï)/', '/(ó|ò|õ|ô|ö)/', '/(Ó|Ò|Õ|Ô|Ö)/', '/(ú|ù|û|ü)/', '/(Ú|Ù|Û|Ü)/', '/(ñ)/', '/(Ñ)/', '/(ç)/', '/(Ç)/'), explode(' ', 'a A e E i I o O u U n N c C'), $itemDesc);
+            $itemDesc = sanitize_text_field($itemDesc);
+            $itemId = $order->product_id;
             $returnUrl = home_url();
 
-            // Create date object for checkout duration.
-            $actualDate = new DateTime();
-            $dateTomorrow = $actualDate->modify('+1 day');
-            $expirDate = $dateTomorrow::ATOM;
-
-            // Body
             $body = array(
-                'reference_id' => $orderId,
-                'expiration_date' => $expirDate,
-                'customer' => array(
-                    'name' => $payerName,
-                    'email' => $payerEmail,
-                    'tax_id' => '00000000000',
-                    'phone' => array(
-                        'country' => '+55',
-                        'area' => $payerPhoneDDD,
-                        'number' => $payerPhone
-                    )
-                ),
-                'customer_modifiable' => true,
-                'items' => array(
-                    'reference_id' => $itemId,
-                    'name' => $itemDesc,
-                    'quantity' => $itemQtd,
-                    'unit_amount' => $itemPriceCents
-                ),
-                'additional_amount' => 0,
-                'discount_amount' => 0,
-                'redirect_url' => $returnUrl,
-                'return_url' => $returnUrl,
-                'notification_urls' => array($notificationUrl),
-                'payment_notification_urls' => array($notificationUrl)
+                'currency' => $payerCurrency,
+                'itemId1' => $itemId,
+                'itemDescription1' => $itemDesc,
+                'itemAmount1' => $itemPriceCents,
+                'itemQuantity1' => 1,
+                'itemWeight' => 0,
+                'shippingAddressRequired' => (string) 'false',
+                'senderName' => $payerName,
+                'senderEmail' => $payerEmail,
+                'senderAreaCode' => $payerPhoneDDD,
+                'senderPhone' => $payerPhone,
+                'reference' => $orderId,
+                'redirectURL' => $returnUrl,
+                'notificationURL' => $notificationUrl,
+                'timeout' => 1440, // 24 horas em minutos
             );
 
             // Header
             $dataHeader = array(
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $tokenKey,
+                'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1',
             );
 
-            // Build request body json.
-            $dataBody = json_encode($body);
+            // Build request body query on pattern x-www-form-urlencoded.
+            $dataBody = http_build_query($body, 'lkn_', '&', \PHP_QUERY_RFC1738);
 
             // Reset the order_key of obj $order for further search.
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
@@ -374,29 +368,31 @@ HTML;
             // Make the request.
             $requestResponse = $this->lkn_lifter_pagseguro_request($dataBody, $dataHeader, $url);
 
-            if ('yes' === $configs['logEnabled']) {
-                llms_log( $requestResponse . \PHP_EOL, 'PagSeguro - Testes');
-            }
+            // Catch XML response data.
+            $responseXml = simplexml_load_string((string) $requestResponse);
+            $returnCode = $responseXml->{'code'};
+            $message = $responseXml->{'message'};
 
-            if (isset($requestResponse)) {
-                // Log request error if not success.
-                if (($message[0]) && ( ! $returnCode[0])) {
-                    if ('yes' === $configs['logEnabled']) {
-                        llms_log( 'PagSeguro Gateway `handle_pending_order()` ended with api request errors', 'PagSeguro - Gateway ');
-                    }
-
-                    return llms_add_notice( 'PagSeguro API error: ' . $message, 'error' );
+            // Log request error if not success.
+            if (($message[0]) && ( ! $returnCode[0])) {
+                if ('yes' === $configs['logEnabled']) {
+                    llms_log( 'PagSeguro Gateway `handle_pending_order()` ended with api request errors', 'PagSeguro - Gateway');
                 }
 
-                // If request is success, save the important data for further use in payment area.
-                if ( ! $message[0] && $returnCode[0]) {
-                    $order->set('pagseguro_return_code', $returnCode[0]);
+                return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
+            }
+
+            // If request is success, save the important data for further use in payment area.
+            if (isset($requestResponse)) {
+                if ($returnCode) {
+                    $order->set('pagcheckout_code', var_export($returnCode, true));
+                    
+                    llms_log('Ret: ' . $returnCode . ' Obj: ' . $order->pagcheckout_code . \PHP_EOL, 'PagSeguro - Testes');
                 } else {
-                    // TODO colocar função para settar status do pedido como "Falha".
                     return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
                 }
             }
-        }        
+        }
 
         /**
          * PagSeguro Request.
@@ -419,7 +415,7 @@ HTML;
                     'body' => $dataBody,
                     'timeout' => '10',
                     'redirection' => '5',
-                    'httpversion' => '1.0',
+                    'httpversion' => '1.1',
                 );
 
                 // Make the request.
@@ -427,7 +423,7 @@ HTML;
 
                 // Register log.
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagSeguro - Gateway ');
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagSeguro - Gateway');
                 }
 
                 return wp_remote_retrieve_body($request);
@@ -460,7 +456,7 @@ HTML;
                     'headers' => $dataHeader,
                     'timeout' => '10',
                     'redirection' => '5',
-                    'httpversion' => '1.0',
+                    'httpversion' => '1.1',
                 );
 
                 // Make the query.
@@ -468,7 +464,7 @@ HTML;
 
                 // Register log.
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway GET: ' . var_export($query, true) . \PHP_EOL, 'PagSeguro - Gateway ');
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway GET: ' . var_export($query, true) . \PHP_EOL, 'PagSeguro - Gateway');
                 }
 
                 return wp_remote_retrieve_body($query);
