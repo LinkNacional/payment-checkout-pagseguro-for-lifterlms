@@ -41,17 +41,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
             }
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
-            add_action( 'wp_enqueue_scripts', array($this, 'enqueue_tooltip_scripts') );
-        }
-
-        /**
-         * Enqueue tooltip for using in Payment Area buttons.
-         *
-         * @since   1.0.0
-         */
-        public function enqueue_tooltip_scripts(): void {
-            wp_enqueue_script('tooltip-js', 'https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js', array('jquery'), '2.11.6', true);
-            wp_enqueue_script('tooltip-init', 'https://unpkg.com/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery', 'tooltip-js'), '5.3.0', true);
         }
 
         /**
@@ -114,19 +103,14 @@ HTML;
                     // Getting obj $order from key.
                     $pagseguroObjOrder = llms_get_order_by_key('#' . $orderId);
 
-                    // Getting URL code for PagSeguro Checkout.
-                    $urlCodePagseguro = $pagseguroObjOrder->pagcheckout_code;
-
-                    $teste = json_encode($pagseguroObjOrder);
-
-                    // Build PagSeguro Checkout URL.
-                    $urlPagseguroCheckout = $configs['urlQuery'] . 'v2/checkout/payment.html?code=' . $urlCodePagseguro;
+                    // Getting URL for PagSeguro Checkout.
+                    $urlPagseguroCheckout = $pagseguroObjOrder->pagcheckout_url;
 
                     $title = esc_html__('Payment Area', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
                     $span = esc_html__('Secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
 
                     $buttonTitle = esc_html__('Pay', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
-                    $buttonTooltip = esc_html__('PagSeguro Checkout Payment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $buttonDesc = esc_html__('PagSeguro Checkout Payment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
 
                     $imgAlt = esc_html__('PagSeguro payment methods logos', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
                     $imgTitle = esc_html__('This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
@@ -136,17 +120,17 @@ HTML;
                     // Make the HTML for present the Payment Area.
                     $paymentArea = <<<HTML
                     <h2>{$title}</h2>
-                    <div class="lkn_payment_area">
+                    <div class="lkn_pagseguro_payment_area">
                         <div id="lkn_secure_site_wrapper">
-                            <span class="llms-icon padlock"></span>
+                            <!-- Padlock HTML code (LifterLMS don't have one icons library) -->
+                            &#128274;
                             <span>
                                 {$span}
                             </span>
                         </div>
-                        <img class="logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="{$imgAlt}" title="{$imgTitle}">
+                        <img class="lifter_logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="{$imgAlt}" title="{$imgTitle}">
                         <p id="text_desc_pagseguro"><b>{$descript}</b></p>
-                        <a id="lkn_pagseguro_pay" href="{$urlPagseguroCheckout}" target="_blank"><button id="lkn_pagseguro_pay_button" data-toggle="tooltip" data-placement="top" title="{$buttonTooltip}">{$buttonTitle}</button></a>
-                        <p>{$teste}</p>
+                        <a id="lkn_pagseguro_pay" href="{$urlPagseguroCheckout}" target="_blank"><button id="lkn_pagseguro_pay_button" title="{$buttonDesc}">{$buttonTitle}</button></a>
                     </div>
 HTML;
 
@@ -242,7 +226,7 @@ HTML;
                     $this->log( 'PagSeguro Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( sprintf( __( 'This gateway cannot process transactions for less than R$ 5,00.', 'min transaction amount error', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ) ), 'error' );
+                return llms_add_notice( __( 'This gateway cannot process transactions for less than R$ 5,00.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -337,21 +321,21 @@ HTML;
             $returnUrl = home_url();
 
             $body = array(
-                'currency' => $payerCurrency,
-                'itemId1' => $itemId,
-                'itemDescription1' => $itemDesc,
-                'itemAmount1' => $itemPriceCents,
-                'itemQuantity1' => 1,
-                'itemWeight' => 0,
+                'currency' => (string) $payerCurrency,
+                'itemId1' => (string) $itemId,
+                'itemDescription1' => (string) $itemDesc,
+                'itemAmount1' => (string) $itemPriceCents,
+                'itemQuantity1' => (string) 1,
+                'itemWeight' => (string) 0,
                 'shippingAddressRequired' => (string) 'false',
-                'senderName' => $payerName,
-                'senderEmail' => $payerEmail,
-                'senderAreaCode' => $payerPhoneDDD,
-                'senderPhone' => $payerPhone,
-                'reference' => $orderId,
-                'redirectURL' => $returnUrl,
-                'notificationURL' => $notificationUrl,
-                'timeout' => 1440, // 24 horas em minutos
+                'senderName' => (string) $payerName,
+                'senderEmail' => (string) $payerEmail,
+                'senderAreaCode' => (string) $payerPhoneDDD,
+                'senderPhone' => (string) $payerPhone,
+                'reference' => (string) $orderId,
+                'redirectURL' => (string) $returnUrl,
+                'notificationURL' => (string) $notificationUrl,
+                'timeout' => (string) 720, // 12 hours in minutes.
             );
 
             // Header
@@ -384,10 +368,12 @@ HTML;
 
             // If request is success, save the important data for further use in payment area.
             if (isset($requestResponse)) {
-                if ($returnCode) {
-                    $order->set('pagcheckout_code', var_export($returnCode, true));
-                    
-                    llms_log('Ret: ' . $returnCode . ' Obj: ' . $order->pagcheckout_code . \PHP_EOL, 'PagSeguro - Testes');
+                if ($returnCode[0] && ! $message[0]) {
+                    // Build the URL for PagSeguro Checkout with the Code.
+                    $pagseguroCheckoutUrl = $configs['urlQuery'] . 'v2/checkout/payment.html?code=' . $returnCode;
+
+                    // Save URL in object property `pagcheckout_url`.
+                    $order->set('pagcheckout_url', $pagseguroCheckoutUrl);
                 } else {
                     return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
                 }
@@ -475,6 +461,135 @@ HTML;
 
                 return array();
             }
+        }
+
+        /**
+         * PagSeguro status Listener.
+         *
+         * @since 1.0.0
+         *
+         * @param WP_REST_Request $request Request Object
+         *
+         * @return WP_REST_Response
+         */
+        public static function lkn_lifter_pagseguro_listener($request) {
+            // Receive notification.
+            if (isset($_GET['lkn_pagseguro_orderid'])) {
+                try {
+                    $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+
+                    // Start verification of order status and att order status.
+    
+                    $notificationCode = sanitize_text_field($_POST['notificationCode']);
+                    $pagseguro_order_id = sanitize_text_field($_GET['lkn_pagseguro_orderid']);
+
+                    $emailKey = $configs['email'];
+                    $tokenKey = $configs['token']; // TODO confirmar esse endpoint: https://dev.pagbank.uol.com.br/v1/reference/api-checkout-pagseguro-consulta-dos-detalhes-da-transacao
+                    $url = $configs['urlPost'] . 'v3/transactions/notifications/' . $notificationCode . '?email=' . $emailKey . '&token=' . $tokenKey;
+    
+                    $dataHeader = array(
+                        'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1',
+                    );
+    
+                    // Query for order status verification.
+                    $queryResponse = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_pagseguro_query($dataHeader, $url);
+    
+                    // Catch XML response data.
+                    $responseXml = simplexml_load_string((string) $queryResponse);
+                    $result = $responseXml->{'status'};
+    
+                    llms_log('Request: ' . $request . \PHP_EOL . 'Query: ' . json_encode($queryResponse) . \PHP_EOL . 'Result: ' . $result . \PHP_EOL . 'Order ID: ' . $pagseguro_order_id . \PHP_EOL, 'PagSeguro - Testes Listener');
+
+                    // Determine order status text.
+                    if (3 == $result[0] || 4 == $result[0]) {
+                        $statusText = 'paid';
+                    } elseif ($result[0]) {
+                        $statusText = 'failed';
+                    } else {
+                        $statusText = 'pending';
+                    }
+
+                    // Search $order object.
+                    $orderObj = llms_get_order_by_key('#' . $pagseguro_order_id);
+
+                    // Verify if is recurring.
+                    $recurrency = $orderObj->is_recurring();
+
+                    // Log informations.
+                    if ('yes' === $configs['logEnabled']) {
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro listener - GET order status: Order #' . var_export($pagseguro_order_id, true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                    }
+
+                    // Call the order_status_setter function.
+                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_pagseguro_order_set_status($orderObj, $statusText, $recurrency);
+
+                    return rest_ensure_response(array_merge($request));
+                } catch (Exception $e) {
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                }
+            }
+        }
+
+        /**
+         * Set the order status.
+         *
+         * @since 1.0.0
+         *
+         * @param LLMS_Order $order      Instance of the LLMS_Order
+         * @param string     $status
+         * @param bool       $recurrency
+         * @param string     $gatewayId
+         * @param string     $gatewayName
+         */
+        public static function lkn_lifter_pagseguro_order_set_status($order, $status, $recurrency): void {
+            try {
+                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+
+                if ('paid' == $status) {
+                    if ($recurrency) {
+                        $order->set('status', 'llms-active');
+
+                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_att_record_pagseguro_transaction($order, 'Signature', 'recurring');
+                    } else {
+                        $order->set('status', 'llms-completed');
+
+                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_att_record_pagseguro_transaction($order, 'Signature', 'single');
+                    }
+                } elseif ('failed' == $status) {
+                    $order->set('status', 'llms-failed'); // TODO confirmar nome do status.
+                } elseif ('pending' == $status) {
+                    $order->set('status', 'llms-pending');
+                } else {
+                    return;
+                }
+            } catch (Exception $e) {
+                if ('yes' === $configs['logEnabled']) {
+                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway - set order status error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
+                }
+            }
+        }
+
+        /**
+         * Update the record transaction dashboard with PagSeguro transactions.
+         *
+         * @since 1.0.0
+         *
+         * @param LLMS_Order $order       Instance of the LLMS_Order
+         * @param string     $description
+         * @param string     $paymentType
+         * @param string     $gatewayId
+         */
+        public function lkn_lifter_att_record_pagseguro_transaction($order, $description, $paymentType): void {
+            $order->record_transaction(
+                array(
+                    'amount' => $order->get_price( 'total', array(), 'float' ),
+                    'source_description' => __( $description, 'lifterlms' ),
+                    'transaction_id' => uniqid(),
+                    'status' => 'llms-txn-succeeded',
+                    'payment_gateway' => $this->id,
+                    'payment_type' => $paymentType,
+                )
+            );
         }
 
         /**

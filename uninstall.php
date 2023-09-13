@@ -29,3 +29,6 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
+
+delete_option('llms_gateway_pagseguro-v1_token_key');
+delete_option('llms_gateway_pagseguro-v1_email');

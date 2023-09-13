@@ -24,24 +24,17 @@
  * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/includes
  * @author     Link Nacional
  */
-class Payment_Checkout_Pagseguro_For_Lifterlms_i18n {
-
-
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
-	 */
-	public function load_plugin_textdomain() {
-
-		load_plugin_textdomain(
-			'payment-checkout-pagseguro-for-lifterlms',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
-
-	}
-
-
-
+final class Payment_Checkout_Pagseguro_For_Lifterlms_i18n {
+    /**
+     * Load the plugin text domain for translation.
+     *
+     * @since    1.0.0
+     */
+    public function load_plugin_textdomain(): void {
+        load_plugin_textdomain(
+            'payment-checkout-pagseguro-for-lifterlms',
+            false,
+            dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+        );
+    }
 }

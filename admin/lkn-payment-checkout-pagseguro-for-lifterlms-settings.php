@@ -23,18 +23,6 @@ if (class_exists('LLMS_Payment_Gateway')) {
                 'type' => 'textarea',
             );
 
-            // Field for Lkn License.
-            $fields[] = array(
-                'id' => $gateway->get_option_name( 'plugin_license' ),
-                'title' => __( 'License', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
-                'desc' => '<br>' . sprintf(
-                    __( 'To use this payment method, acquire a license at %1$shttps://www.linknacional.com.br%2$s', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
-                    '<a href="https://www.linknacional.com.br">',
-                    '</a>'
-                ),
-                'type' => 'password',
-            );
-
             // Field for PagSeguro email.
             $fields[] = array(
                 'id' => $gateway->get_option_name( 'email' ),

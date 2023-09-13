@@ -189,6 +189,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
         $this->loader->add_action( 'init', $this, 'lkn_pagseguro_setup_settings_page');
+        $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lnk_pagseguro_verify_plugin_dependencies', 999);
     }
 
     /**
@@ -224,7 +225,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     public function lkn_lifter_pagseguro_register_routes(): void {
         register_rest_route('lkn-lifter-pagseguro-listener/v1', '/notification', array(
             'methods' => 'POST',
-            'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'lkn_lifter_listen_for_pagseguro'),
+            'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'lkn_lifter_pagseguro_listener'),
             'permission_callback' => __return_empty_string(),
         ));
     }

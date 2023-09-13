@@ -20,17 +20,14 @@
  * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/includes
  * @author     Link Nacional
  */
-class Payment_Checkout_Pagseguro_For_Lifterlms_Activator {
-
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
-
-	}
-
+final class Payment_Checkout_Pagseguro_For_Lifterlms_Activator {
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function activate(): void {
+    }
 }
