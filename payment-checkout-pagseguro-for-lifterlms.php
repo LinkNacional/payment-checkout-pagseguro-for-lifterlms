@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       LifterLMS PagSeguro
  * Plugin URI:        https://www.linknacional.com.br/wordpress/plugins/
- * Description:       Adiciona novas formas de pagamento ao LifterLMS usando a API v1 da PagSeguro.
+ * Description:       Enable new payment methods to LifterLMS using PagSeguro API v1.
  * Version:           1.0.0
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com.br/

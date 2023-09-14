@@ -21,11 +21,13 @@
     justify-content: center;
     margin-bottom: 1%;
     text-decoration: none;
+    margin-left: 43%;
+    margin-right: 43%;
 }
 
 #lkn_pagseguro_pay_button {
     width: auto;
-    padding: 10px;
+    padding: 12px 28px 12px 28px;
     min-width: 16%;
     min-height: 16%;
     height: auto;

@@ -68,7 +68,7 @@ msgstr ""
 msgid "This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip."
 msgstr ""
 
-msgid "Pay with PagSeguro by clicking on button "Pay" right below"
+msgid "Pay with PagSeguro by clicking on button &ldquo;Pay&rdquo; right below"
 msgstr ""
 
 msgid "Not secure payment by SSL encryption."
@@ -89,5 +89,5 @@ msgstr ""
 msgid "Payment via PagSeguro checkout"
 msgstr ""
 
-msgid ""
+msgid "Enable new payment methods to LifterLMS using PagSeguro API v1."
 msgstr ""

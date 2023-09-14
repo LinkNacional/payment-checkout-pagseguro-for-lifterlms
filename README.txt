@@ -1,114 +1,82 @@
-=== Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: https://www.linknacional.com.br/
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+=== Payment Checkout PagSeguro for LifterLMS ===
+Contributors: linknacional
+Donate link: https://www.linknacional.com/wordpress/plugins/
+Tags: lifterlms, pagseguro, pagbank, credit, debit, slip.
+Requires at least: 5.5
+Tested up to: 6.3
+Stable tag: 1.0.0
+Requires PHP: 7.2
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Enable PagSeguro Checkout payment (include debit card, credit card, bank slip, payment with account balance, etc) for LifterLMS.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+The [Payment Checkout PagSeguro for LifterLMS](https://www.linknacional.com/wordpress/plugins/) is an extension plugin for LifterLMS which enables PagSeguro Checkout payment.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
 
-A few notes about the sections above:
+**Dependencies**
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+Payment Checkout PagSeguro for LifterLMS plugin is dependent on [LifterLMS plugin](https://wordpress.org/plugins/lifterlms/), please make sure LifterLMS is installed and properly configured before starting Payment Checkout PagSeguro for LifterLMS installation.
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+**User instructions**
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+1. In the Wordpress sidebar, look for the "Plugins" option and select it;
+
+2. Select the option "Settings" below of the plugin name "LifterLMS PagSeguro";
+
+3. Look for the option 'Enable / Disable' and click on it, with this the payment method will be active;
+
+4. Look for the field "E-mail of PagSeguro" and fill in according to the information in the field caption;
+
+5. Look for the field "Token PagSeguro" and fill in according to the information in the field caption;
+
+6. Look for the option "Type of environment" and select in according to your preference;
+
+7. Configure the rest of the payment method according to your needs;
+
+8. Then, click on the 'Save the Changes' button at the top right of page;
+
+The Payment Checkout PagSeguro for LifterLMS is now live and working.
+
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+1. In the Wordpress sidebar, look for the "Plugins" option and select it;
 
-e.g.
+2. Press the button "Add new" next to the "Plugins" title at the top of page;
 
-1. Upload `payment-checkout-pagseguro-for-lifterlms.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+3. Click on the "Submit Plugin" option in the page title and upload the payment-checkout-pagseguro-for-lifterlms.zip plugin;
+
+4. Click on the "Install now" button and then activate the installed plugin;
+
+At finish this steps, the Payment Checkout PagSeguro for LifterLMS is now activated and ready to be configured.
+
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= What is the plugin license? =
 
-An answer to that question.
+* This plugin is released under a GPL license.
 
-= What about foo bar? =
+= What is needed to use this plugin? =
 
-Answer to foo bar dilemma.
+* LifterLMS version 7.2.0 or latter installed and active.
+
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Nothing;
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
+= 1.0.0 =
+**18/09/2023**
+* Plugin launch.
 
 == Upgrade Notice ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+= 1.0.0 =
+**18/09/2023**
+* Plugin launch.
