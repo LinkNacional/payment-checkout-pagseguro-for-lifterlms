@@ -1,19 +1,6 @@
 <?php
 
 /**
- * The file that defines the core plugin class
- *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
- * @link       https://www.linknacional.com.br/
- * @since      1.0.0
- *
- * @package    Payment_Checkout_Pagseguro_For_Lifterlms
- * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/includes
- */
-
-/**
  * The core plugin class.
  *
  * This is used to define internationalization, admin-specific hooks, and
@@ -22,6 +9,7 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
+ * @link       https://www.linknacional.com.br/
  * @since      1.0.0
  * @package    Payment_Checkout_Pagseguro_For_Lifterlms
  * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/includes
@@ -152,28 +140,10 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * 
      * @since 1.0.0
      */
-    public static function lkn_pagseguro_add_gateway($gateways) {
+    public static function add_gateway($gateways) {
         $gateways[] = 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway';
 
         return $gateways;
-    }
-
-    /**
-     * Adiciona o gateway PagSeguro como método de pagamento no LifterLMS.
-     * 
-     * @since 1.0.0
-     */
-    public function lkn_pagseguro_init_gateway(): void {
-        add_filter( 'lifterlms_payment_gateways', array($this, 'lkn_pagseguro_add_gateway') );
-    }
-
-    /**
-     * Add a link to settings page on plugin card.
-     * 
-     * @since 1.0.0
-     */
-    public function lkn_pagseguro_setup_settings_page(): void {
-        add_filter('plugin_action_links_' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME, array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lkn_pagseguro_plugin_row_meta'), 10, 2);
     }
 
     /**
@@ -184,12 +154,8 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * @access   private
      */
     private function define_admin_hooks(): void {
-        $plugin_admin = new Payment_Checkout_Pagseguro_For_Lifterlms_Admin( $this->get_plugin_name(), $this->get_version() );
-
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-        $this->loader->add_action( 'init', $this, 'lkn_pagseguro_setup_settings_page');
-        $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lnk_pagseguro_verify_plugin_dependencies', 999);
+        $this->loader->add_filter('plugin_action_links_' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME, 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'add_plugin_row_meta', 10, 2);
+        $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999);
     }
 
     /**
@@ -203,29 +169,20 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         $plugin_public = new Payment_Checkout_Pagseguro_For_Lifterlms_Public( $this->get_plugin_name(), $this->get_version() );
 
         $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-        $this->loader->add_action('plugins_loaded', $this, 'lkn_pagseguro_init_gateway');
-        $this->lkn_lifter_pagseguro_init_listener_routes();
+        
+        $this->loader->add_filter( 'lifterlms_payment_gateways', $this, 'add_gateway');
+        $this->loader->add_action('rest_api_init', $this, 'listener_register_routes');
     }
-
-    /**
-     * Add new routes for listen the PagSeguro payments/orders.
-     *
-     * @since 3.0.0
-     */
-    public function lkn_lifter_pagseguro_init_listener_routes(): void {
-        add_action('rest_api_init', array($this, 'lkn_lifter_pagseguro_register_routes'));
-    }   
 
     /**
      * Routes register.
      *
      * @since   3.0.0
      */
-    public function lkn_lifter_pagseguro_register_routes(): void {
+    public function listener_register_routes(): void {
         register_rest_route('lkn-lifter-pagseguro-listener/v1', '/notification', array(
             'methods' => 'POST',
-            'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'lkn_lifter_pagseguro_listener'),
+            'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'pagseguro_listener'),
             'permission_callback' => __return_empty_string(),
         ));
     }

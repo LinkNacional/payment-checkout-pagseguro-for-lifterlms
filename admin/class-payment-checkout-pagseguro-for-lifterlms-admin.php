@@ -50,44 +50,53 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
     }
-
-    /**
-     * Register the stylesheets for the admin area.
-     *
-     * @since    1.0.0
-     */
-    public function enqueue_styles(): void {
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Payment_Checkout_Pagseguro_For_Lifterlms_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Payment_Checkout_Pagseguro_For_Lifterlms_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/payment-checkout-pagseguro-for-lifterlms-admin.css', array(), $this->version, 'all' );
-    }
-
-    /**
-     * Register the JavaScript for the admin area.
-     *
-     * @since    1.0.0
-     */
-    public function enqueue_scripts(): void {
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Payment_Checkout_Pagseguro_For_Lifterlms_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Payment_Checkout_Pagseguro_For_Lifterlms_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/payment-checkout-pagseguro-for-lifterlms-admin.js', array('jquery'), $this->version, false );
+        
+    public static function add_settings_fields($default_fields, $gateway_id) {
+        $gateway = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_lifter_gateway( 'pagseguro-v1' );
+    
+        $fields = array();
+    
+        // Field for Payment instructions.
+        $fields[] = array(
+            'id' => $gateway->get_option_name( 'payment_instructions' ),
+            'desc' => '<br>' . __( 'Displayed to the user when this gateway is selected during checkout. Add information here instructing the student on how to send payment.', 'lifterlms' ),
+            'title' => __( 'Payment Instructions', 'lifterlms' ),
+            'type' => 'textarea',
+        );
+    
+        // Field for PagSeguro email.
+        $fields[] = array(
+            'id' => $gateway->get_option_name( 'email' ),
+            'title' => __( 'E-mail of PagSeguro', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'desc' => '<br>' . __( 'E-mail registred in the administrative area of PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'type' => 'text',
+        );
+    
+        // Field for PagSeguro token key.
+        $fields[] = array(
+            'id' => $gateway->get_option_name( 'token_key' ),
+            'title' => __( 'PagSeguro Token', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'desc' => '<br>' . __( 'API service key of PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'type' => 'password',
+        );
+    
+        // Field for PagSeguro env type.
+        $fields[] = array(
+            'id' => $gateway->get_option_name( 'env_type' ),
+            'title' => __( 'Type of environment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'desc' => '<br>' . __('Enable environment of test or production.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            'type' => 'radio',
+            'default' => 'sandbox',
+            'options' => array(
+                'sandbox' => __('Sandbox', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+                'production' => __('Production', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            ),
+        );
+    
+        if ($gateway->id == $gateway_id) {
+            $default_fields = array_merge($default_fields, $fields);
+        }
+    
+        return $default_fields;
     }
 }

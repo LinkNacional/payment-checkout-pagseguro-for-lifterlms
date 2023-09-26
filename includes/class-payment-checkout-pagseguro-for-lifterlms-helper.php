@@ -11,7 +11,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @since 1.0.0
      */
-    final public static function lnk_pagseguro_verify_plugin_dependencies(): bool {
+    final public static function verify_plugin_dependencies(): bool {
         // Load plugin helper functions.
         if ( ! function_exists('deactivate_plugins') || ! function_exists('is_plugin_active')) {
             require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -26,7 +26,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
             && version_compare(LLMS_VERSION, LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION, '<')
         ) {
             // Show admin notice.
-            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_dependency_alert();
+            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::dependency_alert();
 
             $is_deactivate_plugin = true;
         }
@@ -39,7 +39,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         // Verify if LifterLMS plugin is actived.
         if ( ! $is_Lifter_active) {
             // Show admin notice.
-            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_inactive_alert();
+            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::inactive_alert();
 
             $is_deactivate_plugin = true;
         }
@@ -63,7 +63,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @since 1.0.0
      */
-    final public static function lkn_pagseguro_dependency_notice(): void {
+    final public static function dependency_notice(): void {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s</p></div>',
@@ -84,7 +84,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @since 1.0.0
      */
-    final public static function lkn_pagseguro_inactive_notice(): void {
+    final public static function inactive_notice(): void {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s</p></div>',
@@ -98,12 +98,12 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         echo $message;
     }
 
-    final public static function lkn_pagseguro_dependency_alert(): void {
-        add_action('admin_notices', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lkn_pagseguro_dependency_notice'));
+    final public static function dependency_alert(): void {
+        add_action('admin_notices', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'dependency_notice'));
     }
 
-    final public static function lkn_pagseguro_inactive_alert(): void {
-        add_action('admin_notices', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'lkn_pagseguro_inactive_notice'));
+    final public static function inactive_alert(): void {
+        add_action('admin_notices', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'inactive_notice'));
     }
 
     /**
@@ -116,7 +116,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @return array
      */
-    public static function lkn_pagseguro_plugin_row_meta($plugin_meta, $plugin_file) {
+    public static function add_plugin_row_meta($plugin_meta, $plugin_file) {
         $new_meta_links['setting'] = sprintf(
             '<a href="%1$s">%2$s</a>',
             admin_url('admin.php?page=llms-settings&tab=checkout&section=pagseguro-v1'),
@@ -135,7 +135,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @return object gateway
      */
-    public static function lkn_pagseguro_get_gateways($gateway_id) {
+    public static function get_lifter_gateway($gateway_id) {
         return llms()->payment_gateways()->get_gateway_by_id( $gateway_id );
     }
 
@@ -146,7 +146,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
      *
      * @return array $configs
      */
-    final public static function lkn_pagseguro_get_configs() {
+    final public static function get_configs() {
         $configs = array();
 
         $configs['logEnabled'] = get_option('llms_gateway_pagseguro-v1_logging_enabled', 'no');

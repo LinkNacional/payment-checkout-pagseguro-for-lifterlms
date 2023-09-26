@@ -36,8 +36,8 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $this->set_variables();
             
             if (is_admin()) {
-                require_once LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_DIR . 'admin/lkn-payment-checkout-pagseguro-for-lifterlms-settings.php';
-                add_filter( 'llms_get_gateway_settings_fields', array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Settings', 'checkout_pagseguro_settings_fields'), 10, 2 );
+                require_once LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_DIR . 'admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php';
+                add_filter( 'llms_get_gateway_settings_fields', array('Payment_Checkout_Pagseguro_For_Lifterlms_Admin', 'add_settings_fields'), 10, 2 );
             }
             add_action( 'lifterlms_before_view_order_table', array($this, 'before_view_order_table') );
             add_action( 'lifterlms_after_view_order_table', array($this, 'after_view_order_table') );
@@ -49,7 +49,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
          * @since 1.0.0
          */
         public function before_view_order_table(): void {
-            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             // Get Payment Instruction value.
             $paymentInstruction = esc_html__($configs['paymentInstruction']);
@@ -95,7 +95,7 @@ HTML;
                 // Verification of the gateway, to not execute in other gateways which has no defined this function.
                 if ($order->get( 'payment_gateway' ) === $this->id) {
                     // Getting helper functions and values.
-                    $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+                    $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
                     // Getting orderId number.
                     $orderId = $order->get('id');
@@ -164,7 +164,7 @@ HTML;
          *
          */
         public function handle_payment_source_switch($order, $form_data = array()): void {
-            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             $previous_gateway = $order->get( 'payment_gateway' );
 
@@ -179,7 +179,7 @@ HTML;
 
             // Proccess the switch for PagSeguro Order.
             try {
-                $this->lkn_pagseguro_proccess_order($order);
+                $this->proccess_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro Gateway - Switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
@@ -202,7 +202,7 @@ HTML;
          * @param LLMS_Coupon|bool $coupon  coupon object or `false` when no coupon is being used for the order
          */
         public function handle_pending_order($order, $plan, $student, $coupon = false) {
-            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             // Make log.
             if ('yes' === $configs['logEnabled']) {
@@ -255,7 +255,7 @@ HTML;
             }
 
             // Process PagSeguro Order.
-            $this->lkn_pagseguro_proccess_order($order);
+            $this->proccess_order($order);
 
             /*
              * Action triggered when a pagseguro payment is due.
@@ -288,8 +288,8 @@ HTML;
          *
          * @param LLMS_Order $order order object
          */
-        public function lkn_pagseguro_proccess_order($order) {
-            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+        public function proccess_order($order) {
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             // Get the order total price.
             $total = $order->get_price( 'total', array(), 'float' );
@@ -316,6 +316,7 @@ HTML;
             $notificationUrl = add_query_arg('lkn_pagseguro_orderid', $orderId, site_url() . '/wp-json/lkn-lifter-pagseguro-listener/v1/notification');
             $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
             $itemDesc = preg_replace(array('/(á|à|ã|â|ä)/', '/(Á|À|Ã|Â|Ä)/', '/(é|è|ê|ë)/', '/(É|È|Ê|Ë)/', '/(í|ì|î|ï)/', '/(Í|Ì|Î|Ï)/', '/(ó|ò|õ|ô|ö)/', '/(Ó|Ò|Õ|Ô|Ö)/', '/(ú|ù|û|ü)/', '/(Ú|Ù|Û|Ü)/', '/(ñ)/', '/(Ñ)/', '/(ç)/', '/(Ç)/'), explode(' ', 'a A e E i I o O u U n N c C'), $itemDesc);
+            $itemDesc = substr($itemDesc, 0, 100); // Catch first 100 characters of string (PagSeguro description limit).
             $itemDesc = sanitize_text_field($itemDesc);
             $itemId = $order->product_id;
             $returnUrl = home_url();
@@ -350,7 +351,7 @@ HTML;
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
 
             // Make the request.
-            $requestResponse = $this->lkn_lifter_pagseguro_request($dataBody, $dataHeader, $url);
+            $requestResponse = $this->pagseguro_request($dataBody, $dataHeader, $url);
 
             // Catch XML response data.
             $responseXml = simplexml_load_string((string) $requestResponse);
@@ -391,9 +392,9 @@ HTML;
          *
          * @return array
          */
-        public function lkn_lifter_pagseguro_request($dataBody, $dataHeader, $url) {
+        public function pagseguro_request($dataBody, $dataHeader, $url) {
             try {
-                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
                 // Make the request args.
                 $args = array(
@@ -433,9 +434,9 @@ HTML;
          *
          * @return array
          */
-        public static function lkn_lifter_pagseguro_query($dataHeader, $url) {
+        public static function pagseguro_query($dataHeader, $url) {
             try {
-                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
                 // Make the query args.
                 $args = array(
@@ -472,11 +473,11 @@ HTML;
          *
          * @return WP_REST_Response
          */
-        public static function lkn_lifter_pagseguro_listener($request) {
+        public static function pagseguro_listener($request) {
             // Receive notification.
             if (isset($_GET['lkn_pagseguro_orderid'])) {
                 try {
-                    $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+                    $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
                     // Start verification of order status and att order status.
     
@@ -492,7 +493,7 @@ HTML;
                     );
 
                     // Query for order status verification.
-                    $queryResponse = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_pagseguro_query($dataHeader, $url);
+                    $queryResponse = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::pagseguro_query($dataHeader, $url);
 
                     // Catch XML response data.
                     $responseXml = simplexml_load_string((string) $queryResponse);
@@ -523,7 +524,7 @@ HTML;
                     }
 
                     // Call the order_status_setter function.
-                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_pagseguro_order_set_status($orderObj, $statusText, $recurrency);
+                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($orderObj, $statusText, $recurrency);
 
                     return rest_ensure_response(array_merge($request));
                 } catch (Exception $e) {
@@ -543,19 +544,19 @@ HTML;
          * @param string     $gatewayId
          * @param string     $gatewayName
          */
-        public static function lkn_lifter_pagseguro_order_set_status($order, $status, $recurrency): void {
+        public static function order_set_status($order, $status, $recurrency): void {
             try {
-                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
                 if ('paid' == $status) {
                     if ($recurrency) {
                         $order->set('status', 'llms-active');
 
-                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_att_record_pagseguro_transaction($order, 'Signature', 'recurring');
+                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::record_pagseguro_transaction($order, 'Signature', 'recurring');
                     } else {
                         $order->set('status', 'llms-completed');
 
-                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::lkn_lifter_att_record_pagseguro_transaction($order, 'Signature', 'single');
+                        Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::record_pagseguro_transaction($order, 'Signature', 'single');
                     }
                 } elseif ('failed' == $status) {
                     $order->set('status', 'llms-failed');
@@ -588,7 +589,7 @@ HTML;
          * @param string     $paymentType
          * @param string     $gatewayId
          */
-        public function lkn_lifter_att_record_pagseguro_transaction($order, $description, $paymentType): void {
+        public function record_pagseguro_transaction($order, $description, $paymentType): void {
             $order->record_transaction(
                 array(
                     'amount' => $order->get_price( 'total', array(), 'float' ),
@@ -614,7 +615,7 @@ HTML;
          * @version  3.10.0
          */
         public function handle_recurring_transaction($order) {
-            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::lkn_pagseguro_get_configs();
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             // Switch order status to "on hold" if it's a paid order.
             if ( $order->get_price( 'total', array(), 'float' ) > 0 ) {
@@ -622,7 +623,7 @@ HTML;
                 $order->set_status( 'on-hold' );
 
                 try {
-                    $this->lkn_pagseguro_proccess_order($order);
+                    $this->proccess_order($order);
                 } catch (Exception $e) {
                     if ('yes' === $configs['logEnabled']) {
                         llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');

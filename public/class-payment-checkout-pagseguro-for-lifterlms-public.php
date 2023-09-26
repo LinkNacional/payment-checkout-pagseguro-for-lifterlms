@@ -70,24 +70,4 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Public {
          */
         wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/payment-checkout-pagseguro-for-lifterlms-public.css', array(), $this->version, 'all' );
     }
-
-    /**
-     * Register the JavaScript for the public-facing side of the site.
-     *
-     * @since    1.0.0
-     */
-    public function enqueue_scripts(): void {
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Payment_Checkout_Pagseguro_For_Lifterlms_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Payment_Checkout_Pagseguro_For_Lifterlms_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/payment-checkout-pagseguro-for-lifterlms-public.js', array('jquery'), $this->version, false );
-    }
 }
