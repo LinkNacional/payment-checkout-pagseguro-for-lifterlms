@@ -13,7 +13,7 @@
  * @package           Payment_Checkout_Pagseguro_For_Lifterlms
  *
  * @wordpress-plugin
- * Plugin Name:       LifterLMS PagSeguro
+ * Plugin Name:       Payment Gateway PagSeguro for LifterLMS
  * Plugin URI:        https://www.linknacional.com.br/wordpress/plugins/
  * Description:       Enable new payment methods to LifterLMS using PagSeguro API v1.
  * Version:           1.0.0

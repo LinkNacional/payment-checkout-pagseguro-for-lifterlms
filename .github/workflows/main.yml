@@ -7,6 +7,7 @@ on:
 
 env:
   PLUGIN_NAME: payment-checkout-pagseguro-for-lifterlms
+  PLUGIN_NAME_WITH_UPDATER: payment-checkout-pagseguro-for-lifterlms-updt
 
 jobs:
   release-build:
@@ -17,18 +18,30 @@ jobs:
     - uses: actions/checkout@v3
 
     # Add plugin files to a root directory
+    - name: Make plugin root directory with auto-updater
+      run: "mkdir ${{env.PLUGIN_NAME_WITH_UPDATER}} && cp -r ./admin ./includes ./languages ./public *.php LICENSE ./${{env.PLUGIN_NAME_WITH_UPDATER}}/ && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME_WITH_UPDATER}} -type d -exec chmod 0755 {} + && ls -lah"
+
     - name: Make plugin root directory
-      run: "mkdir $PLUGIN_NAME && mv -t ./$PLUGIN_NAME ./admin ./includes ./languages ./public *.txt *.md *.php LICENSE && find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME}} -type d -exec chmod 0755 {} + && ls -lah"
+      run: "rm -Rf ./includes/plugin-updater && mkdir ${{env.PLUGIN_NAME}} && mv -t ./${{env.PLUGIN_NAME}} ./admin ./includes ./languages ./public *.php LICENSE *.txt && find ./${{env.PLUGIN_NAME}} -type f -exec chmod 0644 {} + && find ./${{env.PLUGIN_NAME}} -type d -exec chmod 0755 {} + && ls -lah"
 
     # Compact plugin as .zip
     - name: Archive Release
       uses: thedoctor0/zip-release@master
       with:
-        type: 'zip'
-        path: '${{ env.PLUGIN_NAME }}'
-        directory: '.'
-        filename: '${{ env.PLUGIN_NAME }}.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
+        type: "zip"
+        path: "${{ env.PLUGIN_NAME }}"
+        directory: "."
+        filename: "${{ env.PLUGIN_NAME }}.zip"
+        exclusions: "*.git* /*node_modules/* .editorconfig"
+
+    - name: Archive Release with auto-updater
+      uses: thedoctor0/zip-release@master
+      with:
+        type: "zip"
+        path: "${{ env.PLUGIN_NAME_WITH_UPDATER }}"
+        directory: "."
+        filename: "${{ env.PLUGIN_NAME_WITH_UPDATER }}.zip"
+        exclusions: "*.git* /*node_modules/* .editorconfig"
 
     # Update version tag
     - name: Bump version and push tag
@@ -42,7 +55,7 @@ jobs:
     - name: Generate new Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ env.PLUGIN_NAME }}.zip"
+        artifacts: "${{ env.PLUGIN_NAME }}.zip,${{env.PLUGIN_NAME_WITH_UPDATER}}.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
         commit: "main"
         draft: true
