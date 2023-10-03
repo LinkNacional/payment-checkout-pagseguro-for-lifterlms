@@ -164,7 +164,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         ));
     }
 
-    public function updater_init(): object {
+    public function updater_init(): ?object {
         if (class_exists('Lkn_Puc_Plugin_UpdateChecker')) {
             return new Lkn_Puc_Plugin_UpdateChecker(
                 'https://api.linknacional.com.br/v2/u/?slug=payment-checkout-pagseguro-for-lifterlms',
