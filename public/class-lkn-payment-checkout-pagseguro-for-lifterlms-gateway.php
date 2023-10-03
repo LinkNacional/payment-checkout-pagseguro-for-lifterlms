@@ -246,7 +246,7 @@ HTML;
                             'transaction_id' => uniqid(),
                             'status' => 'llms-txn-succeeded',
                             'payment_gateway' => 'pagseguro-v1',
-                            'payment_type' => 'single',
+                            'payment_type' => 'single'
                         )
                     );
                 }
@@ -336,12 +336,12 @@ HTML;
                 'reference' => (string) $orderId,
                 'redirectURL' => (string) $returnUrl,
                 'notificationURL' => (string) $notificationUrl,
-                'timeout' => (string) 720, // 12 hours in minutes.
+                'timeout' => (string) 720 // 12 hours in minutes.
             );
 
             // Header
             $dataHeader = array(
-                'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1',
+                'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1'
             );
 
             // Build request body query on pattern x-www-form-urlencoded.
@@ -402,7 +402,7 @@ HTML;
                     'body' => $dataBody,
                     'timeout' => '10',
                     'redirection' => '5',
-                    'httpversion' => '1.1',
+                    'httpversion' => '1.1'
                 );
 
                 // Make the request.
@@ -443,7 +443,7 @@ HTML;
                     'headers' => $dataHeader,
                     'timeout' => '10',
                     'redirection' => '5',
-                    'httpversion' => '1.1',
+                    'httpversion' => '1.1'
                 );
 
                 // Make the query.
@@ -489,7 +489,7 @@ HTML;
                     $url = $configs['urlPost'] . 'v3/transactions/notifications/' . $notificationCode . '?email=' . $emailKey . '&token=' . $tokenKey;
     
                     $dataHeader = array(
-                        'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1',
+                        'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1'
                     );
 
                     // Query for order status verification.
@@ -597,7 +597,7 @@ HTML;
                     'transaction_id' => uniqid(),
                     'status' => 'llms-txn-succeeded',
                     'payment_gateway' => $this->id,
-                    'payment_type' => $paymentType,
+                    'payment_type' => $paymentType
                 )
             );
         }
@@ -685,14 +685,14 @@ HTML;
                 'refunds' => false, // Significa que compras feitas com esse gateway podem ser reembolsadas, porém, esse gateway não funciona como um método de reembolso.
                 'single_payments' => true,
                 'recurring_payments' => true,
-                'test_mode' => false,
+                'test_mode' => false
             );
 
             $this->admin_order_fields = wp_parse_args(
                 array(
                     'customer' => true,
                     'source' => true,
-                    'subscription' => false,
+                    'subscription' => false
                 ),
                 $this->admin_order_fields
             );
