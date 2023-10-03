@@ -1,0 +1,93 @@
+#: Payment Checkout PagSeguro for LifterLMS tradução pt_BR
+msgid "E-mail of PagSeguro"
+msgstr "E-mail do PagSeguro"
+
+msgid "E-mail registred in the administrative area of PagSeguro."
+msgstr "E-mail registrado na área administrativa do PagSeguro."
+
+msgid "PagSeguro Token"
+msgstr "Token PagSeguro"
+
+msgid "API service key of PagSeguro."
+msgstr "Chave do serviço API do PagSeguro."
+
+msgid "Type of environment"
+msgstr "Tipo de ambiente"
+
+msgid "Enable environment of test or production."
+msgstr "Habilita o ambiente de teste ou produção."
+
+msgid "Sandbox"
+msgstr "Sandbox (teste)"
+
+msgid "Production"
+msgstr "Produção"
+
+msgid "Activation Error:"
+msgstr "Erro de Ativação:"
+
+msgid "You must have"
+msgstr "Você precisa ter o"
+
+msgid "LifterLMS"
+msgstr "LifterLMS"
+
+msgid "version"
+msgstr "versão"
+
+msgid "for the LifterLMS PagSeguro to activate."
+msgstr "para ativar o LifterLMS PagSeguro."
+
+msgid "plugin installed and activated for the LifterLMS PagSeguro."
+msgstr "plugin, instalado e ativado para o LifterLMS PagSeguro."
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Check the payment area below."
+msgstr "Verifique a área de pagamento abaixo."
+
+msgid "Payment Instructions"
+msgstr "Instruções de Pagamento"
+
+msgid "Payment Area"
+msgstr "Área de Pagamento"
+
+msgid "Secure payment by SSL encryption."
+msgstr "Pagamento seguro por criptografia SSL."
+
+msgid "Pay"
+msgstr "Pagar"
+
+msgid "PagSeguro Checkout Payment"
+msgstr "Pagamento por PagSeguro Checkout"
+
+msgid "PagSeguro payment methods logos"
+msgstr "Logotipos de métodos de pagamentos PagSeguro"
+
+msgid "This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip."
+msgstr "Este site aceita pagamentos com a maioria das bandeiras e bancos, saldo na conta PagSeguro e boleto bancário."
+
+msgid "Pay with PagSeguro by clicking on button &ldquo;Pay&rdquo; right below"
+msgstr "Pague com PagSeguro clicando no botão &ldquo;Pagar&rdquo; logo abaixo"
+
+msgid "Not secure payment by SSL encryption."
+msgstr "Pagamento não seguro por criptografia SSL."
+
+msgid "This gateway cannot process transactions for less than R$ 5,00."
+msgstr "Esse gateway não pode processar transações menores que R$ 5,00."
+
+msgid "PagSeguro (v1)"
+msgstr "PagSeguro (v1)"
+
+msgid "Allow customers to purchase courses and memberships using PagSeguro."
+msgstr "Permite que clientes comprem cursos e assinaturas usando PagSeguro."
+
+msgid "PagSeguro Checkout"
+msgstr "PagSeguro Checkout"
+
+msgid "Payment via PagSeguro checkout"
+msgstr "Pagamento via PagSeguro checkout"
+
+msgid "Enable new payment methods to LifterLMS using PagSeguro API v1."
+msgstr "Ativa novas formas de pagamento ao LifterLMS usando a API v1 da PagSeguro."

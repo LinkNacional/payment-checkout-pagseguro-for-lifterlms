@@ -1,0 +1,54 @@
+.lkn_pagseguro_payment_area {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: top;
+    border: 3px solid rgb(104, 104, 104);
+    padding: 20px;
+    height: auto;
+}
+
+.lifter_logo_pagseguro {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4.5%;
+    margin-bottom: 1.5%;
+}
+
+#lkn_pagseguro_pay {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1%;
+    text-decoration: none;
+    margin-left: 43%;
+    margin-right: 43%;
+}
+
+#lkn_pagseguro_pay_button {
+    width: auto;
+    padding: 12px 28px 12px 28px;
+    min-width: 16%;
+    min-height: 16%;
+    height: auto;
+    background: #e1e1e1;
+    color: #414141;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.3s, color 0.3s;
+}
+
+#lkn_pagseguro_pay_button:hover {
+    background-color: #616161;
+    color: #eeeeee;
+}
+
+#text_desc_pagseguro {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
