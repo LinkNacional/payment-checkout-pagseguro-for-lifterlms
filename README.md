@@ -1,6 +1,6 @@
 # Payment Checkout PagSeguro for LifterLMS
 
-O [Payment Checkout PagSeguro for LifterLMS](https://www.linknacional.com/wordpress/plugins/) é um plugin extensão para o LifterLMS, que ativa o pagamento por checkout PagSeguro.
+O [Payment Checkout PagSeguro for LifterLMS](https://www.linknacional.com.br/wordpress/lifterlms/pagseguro/) é um plugin extensão para o LifterLMS, que ativa o pagamento por checkout PagSeguro.
 
 ## Dependencias
 
