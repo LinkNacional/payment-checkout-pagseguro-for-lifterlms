@@ -297,9 +297,7 @@ HTML;
             // Payer information
             $payerEmail = $order->billing_email;
             $payerName = $order->get_customer_name();
-            $payerPhone = $order->billing_phone;
-            $payerPhoneDDD = substr($payerPhone, 0, 2);
-            $payerPhone = substr($payerPhone, 2);
+           
             $payerCurrency = $order->currency;
 
             if ('BRL' !== $payerCurrency) {
@@ -311,7 +309,6 @@ HTML;
             // POST parameters
             $tokenKey = $configs['tokenKey'];
             $emailKey = $configs['email'];
-            $url = $configs['urlPost'] . 'v2/checkout?email=' . $emailKey . '&token=' . $tokenKey;
             $orderId = $order->get( 'id' );
             $notificationUrl = add_query_arg('lkn_pagseguro_orderid', $orderId, site_url() . '/wp-json/lkn-lifter-pagseguro-listener/v1/notification');
             $itemDesc = $order->product_title . ' | ' . $order->plan_title . ' (ID# ' . $order->get('plan_id') . ')' ?? $order->plan_title;
@@ -322,44 +319,49 @@ HTML;
             $returnUrl = home_url();
 
             $body = array(
-                'currency' => (string) $payerCurrency,
-                'itemId1' => (string) $itemId,
-                'itemDescription1' => (string) $itemDesc,
-                'itemAmount1' => (string) $itemPriceCents,
-                'itemQuantity1' => (string) 1,
-                'itemWeight' => (string) 0,
-                'shippingAddressRequired' => (string) 'false',
-                'senderName' => (string) $payerName,
-                'senderEmail' => (string) $payerEmail,
-                'senderAreaCode' => (string) $payerPhoneDDD,
-                'senderPhone' => (string) $payerPhone,
-                'reference' => (string) $orderId,
-                'redirectURL' => (string) $returnUrl,
-                'notificationURL' => (string) $notificationUrl,
-                'timeout' => (string) 720 // 12 hours in minutes.
-            );
+                'reference_id' => $orderId,
+                'customer' => array(
+                    "name" => $payerName,
+                    'email' => $payerEmail,
+                ),
 
+                'customer_modifiable' => true,
+                'items' => array(
+                    array(
+                        'reference_id' => $itemId,
+                        'name' => "Curso",
+                        'description' => $itemDesc,
+                        'quantity' => 1,
+                        'unit_amount' => $total * 100,
+                    ),
+                ),
+                'payment_method' => array(
+                    'type' => 'CREDIT_CARD',
+                    'installments' => 1, // If subsequent is string
+                ),
+                "redirect_url" => $returnUrl,
+            );
             // Header
             $dataHeader = array(
-                'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1'
+                'Authorization: Bearer ' . $tokenKey,
+                'accept: application/json',
+                'Content-type: application/json',
             );
-
+            
             // Build request body query on pattern x-www-form-urlencoded.
-            $dataBody = http_build_query($body, 'lkn_', '&', \PHP_QUERY_RFC1738);
-
+        
             // Reset the order_key of obj $order for further search.
             update_post_meta($orderId, '_llms_order_key', '#' . $orderId);
 
             // Make the request.
-            $requestResponse = $this->pagseguro_request($dataBody, $dataHeader, $url);
+            $requestResponse = json_decode($this->pagseguro_request($body, $dataHeader, "/checkouts"), true);
+        
+            $returnCode = $requestResponse['status'];
 
-            // Catch XML response data.
-            $responseXml = simplexml_load_string((string) $requestResponse);
-            $returnCode = $responseXml->{'code'};
-            $message = $responseXml->{'message'};
+            $message = empty($requestResponse['message'])? null: array($requestResponse["message"]);
 
             // Log request error if not success.
-            if (($message[0]) && ( ! $returnCode[0])) {
+            if (($message[0]) ) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'PagSeguro Gateway `handle_pending_order()` ended with api request errors', 'PagSeguro - Gateway');
                 }
@@ -369,11 +371,11 @@ HTML;
 
             // If request is success, save the important data for further use in payment area.
             if (isset($requestResponse)) {
-                if ($returnCode[0] && ! $message[0]) {
+                if ( ! $message[0]) {
                     // Build the URL for PagSeguro Checkout with the Code.
-                    $pagseguroCheckoutUrl = $configs['urlQuery'] . 'v2/checkout/payment.html?code=' . $returnCode;
+                    $pagseguroCheckoutUrl = $requestResponse["links"][1]['href'];
 
-                    // Save URL in object property `pagcheckout_url`.
+                    // Save URL in object property `pagcheckout_url`.   
                     $order->set('pagcheckout_url', $pagseguroCheckoutUrl);
                 } else {
                     return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
@@ -396,24 +398,21 @@ HTML;
             try {
                 $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
-                // Make the request args.
-                $args = array(
-                    'headers' => $dataHeader,
-                    'body' => $dataBody,
-                    'timeout' => '10',
-                    'redirection' => '5',
-                    'httpversion' => '1.1'
-                );
-
-                // Make the request.
-                $request = wp_remote_post($url, $args);
-
-                // Register log.
-                if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway POST: ' . var_export($request, true) . \PHP_EOL, 'PagSeguro - Gateway');
-                }
-
-                return wp_remote_retrieve_body($request);
+                $curl_chamada = curl_init();
+            
+                curl_setopt_array($curl_chamada, array(
+                    \CURLOPT_CUSTOMREQUEST => 'POST',
+                    \CURLOPT_URL => $configs['urlPost'] . $url,
+                    \CURLOPT_HTTPHEADER => $dataHeader,
+                    \CURLOPT_POSTFIELDS => json_encode($dataBody),
+                    \CURLOPT_RETURNTRANSFER => true,
+                ));
+            
+                $result = curl_exec($curl_chamada);
+                $erro = curl_error($curl_chamada);
+                $info = curl_getinfo($curl_chamada);
+                curl_close($curl_chamada);
+                return $result;
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway POST error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
@@ -434,27 +433,23 @@ HTML;
          *
          * @return array
          */
-        public static function pagseguro_query($dataHeader, $url) {
+        public static function pagseguro_query($header, $url, $query, $configs) {
             try {
-                $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
-
-                // Make the query args.
-                $args = array(
-                    'headers' => $dataHeader,
-                    'timeout' => '10',
-                    'redirection' => '5',
-                    'httpversion' => '1.1'
-                );
-
-                // Make the query.
-                $query = wp_remote_get($url, $args);
-
-                // Register log.
-                if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway GET: ' . var_export($query, true) . \PHP_EOL, 'PagSeguro - Gateway');
-                }
-
-                return wp_remote_retrieve_body($query);
+                $ch = curl_init();
+                curl_setopt_array($ch, array(
+                    \CURLOPT_CUSTOMREQUEST => 'GET',
+                    \CURLOPT_URL => $url . $query,
+                    \CURLOPT_HTTPHEADER => $header,
+                    \CURLOPT_RETURNTRANSFER => true,
+                ));
+        
+                $response = curl_exec($ch);
+                $erro = curl_error($ch);
+                $info = curl_getinfo($ch);
+        
+                curl_close($ch);
+        
+                return $response;
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway GET error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
@@ -473,7 +468,7 @@ HTML;
          *
          * @return WP_REST_Response
          */
-        public static function pagseguro_listener($request) {
+        public static function pagseguro_listener() {
             // Receive notification.
             if (isset($_GET['lkn_pagseguro_orderid'])) {
                 try {
@@ -483,50 +478,31 @@ HTML;
     
                     $notificationCode = sanitize_text_field($_POST['notificationCode']);
                     $pagseguro_order_id = sanitize_text_field($_GET['lkn_pagseguro_orderid']);
-
-                    $emailKey = $configs['email'];
                     $tokenKey = $configs['tokenKey'];
-                    $url = $configs['urlPost'] . 'v3/transactions/notifications/' . $notificationCode . '?email=' . $emailKey . '&token=' . $tokenKey;
-    
+                    $url = $configs['urlPost'] ;
+                    
                     $dataHeader = array(
-                        'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1'
+                        'Authorization: Bearer ' . $tokenKey,
+                        'accept: application/json',
                     );
 
                     // Query for order status verification.
-                    $queryResponse = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::pagseguro_query($dataHeader, $url);
-
-                    // Catch XML response data.
-                    $responseXml = simplexml_load_string((string) $queryResponse);
-                    $result = $responseXml->{'status'};
-                    
-                    // Determine order status text.
-                    if (3 == $result[0] || 4 == $result[0]) {
-                        $statusText = 'paid';
-                    } elseif (8 == $result[0] || 6 == $result[0]) {
-                        $statusText = 'refunded';
-                    } elseif (7 == $result[0]) {
-                        $statusText = 'canceled';
-                    } elseif ($result[0]) {
-                        $statusText = 'failed';
-                    } else {
-                        $statusText = 'pending';
-                    }
-
+                    $queryResponse = json_decode(Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::pagseguro_query($dataHeader, $url, "/checkouts/" . $pagseguro_order_id, $configs), true);
+                    $result = $queryResponse["status"];
+                  
                     // Search $order object.
-                    $orderObj = llms_get_order_by_key('#' . $pagseguro_order_id);
-
+                    $orderObj = llms_get_order_by_key('#' . $queryResponse["reference_id"]);
                     // Verify if is recurring.
                     $recurrency = $orderObj->is_recurring();
 
                     // Log informations.
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro listener - GET order status: Order #' . var_export($pagseguro_order_id, true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                        llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro listener - GET order status: Order #' . var_export($$queryResponse["reference_id"], true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
                     }
 
                     // Call the order_status_setter function.
-                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($orderObj, $statusText, $recurrency);
-
-                    return rest_ensure_response(array_merge($request));
+                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($orderObj, $result, $recurrency);
+                    return json_encode(array($result, ));
                 } catch (Exception $e) {
                     llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
                 }

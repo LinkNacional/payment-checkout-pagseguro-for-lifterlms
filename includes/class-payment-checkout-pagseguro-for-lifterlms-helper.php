@@ -158,11 +158,11 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         $configs['env'] = get_option('llms_gateway_pagseguro-v1_env_type', 'sandbox');
 
         if ('production' === $configs['env']) {
-            $configs['urlQuery'] = 'https://pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.pagseguro.uol.com.br/';
+            $configs['urlQuery'] = 'https://api.pagseguro.com';
+            $configs['urlPost'] = '	https://api.pagseguro.com';
         } else {
-            $configs['urlQuery'] = 'https://sandbox.pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.sandbox.pagseguro.uol.com.br/';
+            $configs['urlQuery'] = 'https://sandbox.api.pagseguro.com';
+            $configs['urlPost'] = 'https://sandbox.api.pagseguro.com';
         }
 
         return $configs;
