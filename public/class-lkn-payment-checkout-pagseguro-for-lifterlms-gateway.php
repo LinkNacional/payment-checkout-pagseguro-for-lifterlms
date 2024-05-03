@@ -355,7 +355,6 @@ HTML;
 
             // Make the request.
             $requestResponse = json_decode($this->pagseguro_request($body, $dataHeader, "/checkouts"), true);
-            $returnCode = $requestResponse['status'];
             $message = empty($requestResponse['error_messages'])? null: array($requestResponse["error_messages"]["error"]);
             // Log request error if not success.
             if (($message) ) {
@@ -475,7 +474,7 @@ HTML;
             
             $result = self::pagseguro_listener($order, $checkId);
             $recurrency = $order->is_recurring();
-            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($order, strtolower("paid"), $recurrency);
+            Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($order, strtolower($result), $recurrency);
         }
 
         /**
