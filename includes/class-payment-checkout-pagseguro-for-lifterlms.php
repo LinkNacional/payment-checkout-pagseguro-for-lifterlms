@@ -143,7 +143,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * Adiciona o PagSeguro à lista de gateways disponíveis.
      * 
-     * @since 1.0.0
+     * @since 1.0.1
      */
     public static function add_gateway($gateways) {
         $gateways[] = 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway';
@@ -203,6 +203,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         
         $this->loader->add_filter('lifterlms_payment_gateways', $this, 'add_gateway');
         $this->loader->add_action('rest_api_init', $this, 'listener_register_routes');
+        $this->loader->add_action('init', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'register_lkn_give_cielo_qr_code_check_payment_cron_actions', 10);
     }
 
     /**
