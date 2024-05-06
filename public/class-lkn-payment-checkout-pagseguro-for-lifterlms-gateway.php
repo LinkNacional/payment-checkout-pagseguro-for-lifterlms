@@ -323,10 +323,6 @@ HTML;
                 'customer' => array(
                     "name" => $payerName,
                     'email' => $payerEmail,
-                    "phone" => array("country" => "+55",
-                        "area" => $ddd,
-                        "number" => $numberPhone
-                    ),
                 ),
                 'items' => array(
                     array(
@@ -355,6 +351,7 @@ HTML;
 
             // Make the request.
             $requestResponse = json_decode($this->pagseguro_request($body, $dataHeader, "/checkouts"), true);
+
             $message = empty($requestResponse['error_messages'])? null: array($requestResponse["error_messages"]["error"]);
             // Log request error if not success.
             if (($message) ) {
@@ -362,7 +359,7 @@ HTML;
                     llms_log( 'PagSeguro Gateway `handle_pending_order()` ended with api request errors', 'PagSeguro - Gateway');
                 }
 
-                return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
+                return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message[0], 'error' );
             }
             // If request is success, save the important data for further use in payment area.
             if (isset($requestResponse)) {
