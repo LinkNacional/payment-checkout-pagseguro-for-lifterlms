@@ -181,7 +181,7 @@ HTML;
                 $this->proccess_order($order);
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro Gateway - Switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro Gateway - Switch payment method process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
                 }
             }
 
@@ -341,9 +341,9 @@ HTML;
             );
             // Header
             $dataHeader = array(
-                'Authorization: Bearer ' . $tokenKey,
-                'accept: application/json',
-                'Content-type: application/json',
+                'Authorization' => 'Bearer ' . $tokenKey,
+                'accept' => 'application/json',
+                'Content-type' => 'application/json',
             );
 
             // Reset the order_key of obj $order for further search.
@@ -351,7 +351,6 @@ HTML;
 
             // Make the request.
             $requestResponse = json_decode($this->pagseguro_request($body, $dataHeader, "/checkouts"), true);
-
             $message = empty($requestResponse['error_messages'])? null: array($requestResponse["error_messages"]["error"]);
             // Log request error if not success.
             if (($message) ) {
@@ -389,25 +388,21 @@ HTML;
         public function pagseguro_request($dataBody, $dataHeader, $url) {
             try {
                 $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
-
-                $curl_chamada = curl_init();
-            
-                curl_setopt_array($curl_chamada, array(
-                    \CURLOPT_CUSTOMREQUEST => 'POST',
-                    \CURLOPT_URL => $configs['urlPost'] . $url,
-                    \CURLOPT_HTTPHEADER => $dataHeader,
-                    \CURLOPT_POSTFIELDS => json_encode($dataBody),
-                    \CURLOPT_RETURNTRANSFER => true,
-                ));
-            
-                $result = curl_exec($curl_chamada);
-                $erro = curl_error($curl_chamada);
-                $info = curl_getinfo($curl_chamada);
-                curl_close($curl_chamada);
-                return $result;
+                $req = array(
+                    "body" => wp_json_encode($dataBody),
+                    "headers" => $dataHeader
+                );
+                $result = wp_remote_post($configs["urlPost"] . $url, $req );
+                // Verifica se a solicitação foi bem-sucedida
+                if ( is_wp_error( $result ) ) {
+                    throw new Exception($result->get_error_message(), 1);
+                } else {
+                    $response = wp_remote_retrieve_body( $result );
+                    return $response;
+                }
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway POST error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway POST error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
                 }
 
                 return array();
@@ -427,24 +422,20 @@ HTML;
          */
         public static function pagseguro_query($header, $url, $query, $configs) {
             try {
-                $ch = curl_init();
-                curl_setopt_array($ch, array(
-                    \CURLOPT_CUSTOMREQUEST => 'GET',
-                    \CURLOPT_URL => $url . $query,
-                    \CURLOPT_HTTPHEADER => $header,
-                    \CURLOPT_RETURNTRANSFER => true,
-                ));
-        
-                $response = curl_exec($ch);
-                $erro = curl_error($ch);
-                $info = curl_getinfo($ch);
-        
-                curl_close($ch);
-        
-                return $response;
+                $req = array(
+                    "headers" => $header
+                );
+
+                $response = wp_remote_get($url . $query, $req);
+                if ( is_wp_error( $response ) ) {
+                    throw new Exception($response->get_error_message(), 1);
+                } else {
+                    $response = wp_remote_retrieve_body( $response );
+                    return $response . "teste";
+                }
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway GET error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway GET error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Error');
                 }
 
                 return array();
@@ -501,7 +492,7 @@ HTML;
                 $orderObj = llms_get_order_by_key('#' . $pagseguro_order_id);
                     
                 // Query for order status verification.
-                $queryResponse = json_decode(Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::pagseguro_query($dataHeader, $url, "/checkouts/" . $checkId, $configs), true);
+                $queryResponse = wp_json_decode(Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::pagseguro_query($dataHeader, $url, "/checkouts/" . $checkId, $configs), true);
                 $result = $queryResponse["status"];
                
                 // Search $order object.
@@ -510,7 +501,7 @@ HTML;
 
                 // Log informations.
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro listener - GET order status: Order #' . var_export($queryResponse["reference_id"], true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro listener - GET order status: Order #' . var_export($queryResponse["reference_id"], true) . \PHP_EOL . var_export($orderObj, true) . \PHP_EOL . 'Is recurring: ' . var_export($recurrency, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
                 }
 
                 // Call the order_status_setter function.
@@ -518,7 +509,7 @@ HTML;
                     
                 return $result;
             } catch (Exception $e) {
-                llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
             }
         }
 
@@ -563,7 +554,7 @@ HTML;
                 }
             } catch (Exception $e) {
                 if ('yes' === $configs['logEnabled']) {
-                    llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway - set order status error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway - set order status error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
                 }
             }
         }
@@ -615,7 +606,7 @@ HTML;
                     $this->proccess_order($order);
                 } catch (Exception $e) {
                     if ('yes' === $configs['logEnabled']) {
-                        llms_log('Date: ' . date('d M Y H:i:s') . ' PagSeguro gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
+                        llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway - recurring order process error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway');
                     }
                 }
 

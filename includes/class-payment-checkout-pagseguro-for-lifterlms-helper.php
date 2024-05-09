@@ -48,7 +48,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         if ($is_deactivate_plugin) {
             deactivate_plugins(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME);
 
-            if (isset($_GET['activate'])) {
+            if (wp_verify_nonce(isset($_GET['activate']))) {
                 unset($_GET['activate']);
             }
 
