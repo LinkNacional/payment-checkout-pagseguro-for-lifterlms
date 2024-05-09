@@ -90,7 +90,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
             __('for the LifterLMS PagSeguro to activate.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
         );
 
-        echo $message;
+        echo esc_html($message);
     }
 
     /**
@@ -109,7 +109,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
             __('plugin installed and activated for the LifterLMS PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
         );
 
-        echo $message;
+        echo esc_html($message);
     }
 
     final public static function dependency_alert(): void {

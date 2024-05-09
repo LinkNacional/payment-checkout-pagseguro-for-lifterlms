@@ -75,7 +75,7 @@ HTML;
                     $order->get( 'payment_gateway' ) === $this->id
                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                 ) {
-                    echo apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id );
+                    echo esc_html(apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id ));
                 }
             }
         }
@@ -143,7 +143,7 @@ HTML;
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+                            echo esc_html(apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ));
                         }
                     }
                 }

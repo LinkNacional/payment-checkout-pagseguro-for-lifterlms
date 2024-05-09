@@ -1,7 +1,7 @@
 === Payment Checkout PagSeguro for LifterLMS ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: lifterlms, pagseguro, pagbank, credit, debit, slip
+Tags: lifterlms, pagseguro, pagbank, credit, debit
 Requires at least: 5.5
 Tested up to: 6.3
 Stable tag: 1.0.1
