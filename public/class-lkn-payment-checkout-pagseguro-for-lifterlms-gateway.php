@@ -3,16 +3,16 @@
 /**
  * Class of PagSeguro Gateway.
  *
- * @since 1.0.1
+ * @since 2.0.0
  *
- * @version 1.0.1
+ * @version 2.0.0
  */
 defined( 'ABSPATH' ) || exit;
 
 /*
  * Class of PagSeguro Gateway.
  *
- * @since 1.0.1
+ * @since 2.0.0
  */
 if (class_exists('LLMS_Payment_Gateway')) {
     final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway extends LLMS_Payment_Gateway {
@@ -21,16 +21,16 @@ if (class_exists('LLMS_Payment_Gateway')) {
          *
          * @var string
          *
-         * @since 1.0.1
+         * @since 2.0.0
          */
         protected $payment_instructions;
 
         /**
          * Constructor.
          *
-         * @since   1.0.0
+         * @since   2.0.0
          *
-         * @since 1.0.1         */
+         * @since 2.0.0         */
         public function __construct() {
             $this->set_variables();
             
@@ -45,7 +45,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
         /**
          * Output payment instructions if the order is pending | on-hold.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          */
         public function before_view_order_table(): void {
             $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
@@ -75,7 +75,7 @@ HTML;
                     $order->get( 'payment_gateway' ) === $this->id
                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                 ) {
-                    echo esc_html(apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id ));
+                    echo apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id );
                 }
             }
         }
@@ -83,7 +83,7 @@ HTML;
         /**
          * Output payment area if the order is pending.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          */
         public function after_view_order_table(): void {
             global $wp;
@@ -143,7 +143,7 @@ HTML;
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo esc_html(apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ));
+                            echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
                         }
                     }
                 }
@@ -271,7 +271,7 @@ HTML;
             /*
              * Action triggered when the pending order processing has been completed.
              *
-             * @since 1.0.1.
+             * @since 2.0.0.
              *
              * @param LLMS_Order $order The order object.
              */
@@ -283,7 +283,7 @@ HTML;
         /**
          * Proccess the PagSeguro order.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param LLMS_Order $order order object
          */
@@ -377,7 +377,7 @@ HTML;
         /**
          * PagSeguro Request.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param mixed $dataBody
          * @param mixed $dataHeader
@@ -412,7 +412,7 @@ HTML;
         /**
          * PagSeguro Query.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param mixed $dataBody
          * @param mixed $dataHeader
@@ -468,7 +468,7 @@ HTML;
         /**
          * PagSeguro status Listener.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param WP_REST_Request $request Request Object
          *
@@ -516,7 +516,7 @@ HTML;
         /**
          * Set the order status.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param LLMS_Order $order      Instance of the LLMS_Order
          * @param string     $status
@@ -562,7 +562,7 @@ HTML;
         /**
          * Update the record transaction dashboard with PagSeguro transactions.
          *
-         * @since 1.0.1
+         * @since 2.0.0
          *
          * @param LLMS_Order $order       Instance of the LLMS_Order
          * @param string     $description

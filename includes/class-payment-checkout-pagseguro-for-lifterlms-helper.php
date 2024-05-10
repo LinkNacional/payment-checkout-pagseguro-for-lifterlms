@@ -2,14 +2,14 @@
 
 /**
  * @see        https://www.linknacional.com/
- * @since      1.0.0
+ * @since      2.0.0
  * @author     Link Nacional
  */
 final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Show plugin dependency notice.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      */
     final public static function verify_plugin_dependencies(): bool {
         // Load plugin helper functions.
@@ -75,7 +75,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Notice for lifterLMS dependecy.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      */
     final public static function dependency_notice(): void {
         // Admin notice.
@@ -90,13 +90,13 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
             __('for the LifterLMS PagSeguro to activate.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
         );
 
-        echo esc_html($message);
+        echo $message;
     }
 
     /**
      * Notice for No Core Activation.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      */
     final public static function inactive_notice(): void {
         // Admin notice.
@@ -109,7 +109,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
             __('plugin installed and activated for the LifterLMS PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
         );
 
-        echo esc_html($message);
+        echo $message;
     }
 
     final public static function dependency_alert(): void {
@@ -123,7 +123,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Plugin row meta links.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      *
      * @param array $plugin_meta An array of the plugin's metadata.
      * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
@@ -143,7 +143,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Returns an instance of an gateway.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      *
      * @param string $gateway_id
      *
@@ -156,7 +156,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Array for pick the data of the gateways settings in LifterLMS.
      *
-     * @since 1.0.1
+     * @since 2.0.0
      *
      * @return array $configs
      */

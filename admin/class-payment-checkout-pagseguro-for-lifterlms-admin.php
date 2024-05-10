@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://www.linknacional.com.br/
- * @since      1.0.0
+ * @since      2.0.0
  *
  * @package    Payment_Checkout_Pagseguro_For_Lifterlms
  * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/admin
@@ -24,7 +24,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
     /**
      * The ID of this plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      * @var      string    $plugin_name    The ID of this plugin.
      */
@@ -33,7 +33,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
     /**
      * The version of this plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      * @var      string    $version    The current version of this plugin.
      */
@@ -42,7 +42,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
     /**
      * Initialize the class and set its properties.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @param      string    $plugin_name       The name of this plugin.
      * @param      string    $version    The version of this plugin.
      */

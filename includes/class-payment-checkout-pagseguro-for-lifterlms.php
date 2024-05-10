@@ -10,7 +10,7 @@
  * version of the plugin.
  *
  * @link       https://www.linknacional.com.br/
- * @since      1.0.0
+ * @since      2.0.0
  * @package    Payment_Checkout_Pagseguro_For_Lifterlms
  * @subpackage Payment_Checkout_Pagseguro_For_Lifterlms/includes
  * @author     Link Nacional
@@ -20,7 +20,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      Payment_Checkout_Pagseguro_For_Lifterlms_Loader    $loader    Maintains and registers all hooks for the plugin.
      */
@@ -29,7 +29,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * The unique identifier of this plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      string    $plugin_name    The string used to uniquely identify this plugin.
      */
@@ -38,7 +38,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * The current version of the plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   protected
      * @var      string    $version    The current version of the plugin.
      */
@@ -51,13 +51,13 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Load the dependencies, define the locale, and set the hooks for the admin area and
      * the public-facing side of the site.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      */
     public function __construct() {
         if ( defined( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION' ) ) {
             $this->version = LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION;
         } else {
-            $this->version = '1.0.0';
+            $this->version = '2.0.0';
         }
         $this->plugin_name = 'payment-checkout-pagseguro-for-lifterlms';
 
@@ -80,7 +80,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function load_dependencies(): void {
@@ -131,7 +131,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Uses the Payment_Checkout_Pagseguro_For_Lifterlms_i18n class in order to set the domain and to register the hook
      * with WordPress.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function set_locale(): void {
@@ -143,7 +143,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * Adiciona o PagSeguro à lista de gateways disponíveis.
      * 
-     * @since 1.0.1
+     * @since 2.0.0
      */
     public static function add_gateway($gateways) {
         $gateways[] = 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway';
@@ -180,7 +180,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Register all of the hooks related to the admin area functionality
      * of the plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function define_admin_hooks(): void {
@@ -193,7 +193,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Register all of the hooks related to the public-facing functionality
      * of the plugin.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      * @access   private
      */
     private function define_public_hooks(): void {
@@ -209,7 +209,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * Run the loader to execute all of the hooks with WordPress.
      *
-     * @since    1.0.0
+     * @since    2.0.0
      */
     public function run(): void {
         $this->loader->run();
@@ -219,7 +219,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * The name of the plugin used to uniquely identify it within the context of
      * WordPress and to define internationalization functionality.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    string    The name of the plugin.
      */
     public function get_plugin_name() {
@@ -229,7 +229,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * The reference to the class that orchestrates the hooks with the plugin.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    Payment_Checkout_Pagseguro_For_Lifterlms_Loader    Orchestrates the hooks of the plugin.
      */
     public function get_loader() {
@@ -239,7 +239,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
     /**
      * Retrieve the version number of the plugin.
      *
-     * @since     1.0.0
+     * @since     2.0.0
      * @return    string    The version number of the plugin.
      */
     public function get_version() {

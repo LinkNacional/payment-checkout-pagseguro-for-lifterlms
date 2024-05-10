@@ -1,10 +1,10 @@
 === Payment Checkout PagSeguro for LifterLMS ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: lifterlms, pagseguro, pagbank, credit, debit
+Tags: lifterlms, pagseguro, pagbank, credit, debit, slip
 Requires at least: 5.5
 Tested up to: 6.3
-Stable tag: 1.0.1
+Stable tag: 2.0.0
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -71,12 +71,12 @@ At finish this steps, the Payment Checkout PagSeguro for LifterLMS is now activa
 
 == Changelog ==
 
-= 1.0.0 =
+= 2.0.0 =
 **18/09/2023**
 * Plugin launch.
 
 == Upgrade Notice ==
 
-= 1.0.0 =
+= 2.0.0 =
 **18/09/2023**
 * Plugin launch.

@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://www.linknacional.com.br/
- * @since             1.0.0
+ * @since             2.0.0
  * @package           Payment_Checkout_Pagseguro_For_Lifterlms
  *
  * @wordpress-plugin
  * Plugin Name:       Payment Gateway PagSeguro for LifterLMS
  * Plugin URI:        https://www.linknacional.com.br/wordpress/plugins/
  * Description:       Enable new payment methods to LifterLMS using PagSeguro API v1.
- * Version:           1.0.1
+ * Version:           2.0.0
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com.br/
  * License:           GPL-3.0+
@@ -32,10 +32,10 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
+ * Start at version 2.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '1.0.1' );
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '2.0.0' );
 
 define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION', '7.2.0' );
 
@@ -83,7 +83,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-payment-checkout-pagseguro
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since    2.0.0
  */
 function run_payment_checkout_pagseguro_for_lifterlms(): void {
     $plugin = new Payment_Checkout_Pagseguro_For_Lifterlms();
