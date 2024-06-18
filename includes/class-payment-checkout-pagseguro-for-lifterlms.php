@@ -157,7 +157,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * @since   3.0.0
      */
     public function listener_register_routes(): void {
-        register_rest_route('lkn-lifter-pagseguro-listener/v1', '/notification', array(
+        register_rest_route('lknLifterPagseguro/v1', '/listener', array(
             'methods' => 'POST',
             'callback' => array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'pagseguro_listener'),
             'permission_callback' => __return_empty_string(),
