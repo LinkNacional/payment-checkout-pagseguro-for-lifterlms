@@ -91,3 +91,6 @@ msgstr "Pagamento via PagSeguro checkout"
 
 msgid "Enable new payment methods to LifterLMS using PagSeguro API v1."
 msgstr "Ativa novas formas de pagamento ao LifterLMS usando a API v1 da PagSeguro."
+
+msgid "Invalid signature. Event discarded."
+msgstr "Assinatura inválida. Evento descartado."

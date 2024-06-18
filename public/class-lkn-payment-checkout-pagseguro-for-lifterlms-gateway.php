@@ -452,31 +452,38 @@ HTML;
          * @return WP_REST_Response
          */
         public static function pagseguro_listener($request) {
-            // Receive notification.
-            $body = json_decode($request->get_body());
-            $order = llms_get_order_by_key('#' . $body->reference_id);
-            $result = $body->status;
-
-            add_option('teste post post' . uniqid(), json_encode($_POST));
-            $response = new WP_REST_Response(array(
-                'GET' => $_GET,
-                'POST' => $_POST,
-                'BODY' => $body,
-                'Variaveis' => array(
-                    'order' => json_encode($order),
-                    '>is_recurring()' => json_encode($order->is_recurring())
-                )
-            ));
-            $response->set_status(200);
-            try {                
-                $recurrency = $order->is_recurring();
-                // Call the order_status_setter function.
-                Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($order, $result, $recurrency);
-
-                return $result;
-            } catch (Exception $e) {
-                return $e->getMessage();
-                llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+            $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
+            $token = $configs['tokenKey'];
+            $payload = $request->get_body();
+        
+            // Recebendo a assinatura do header.
+            $received_signature = $request->get_header('x-authenticity-token');
+        
+            // Combinando o token e o payload com um hífen entre eles.
+            $data_to_sign = $token . '-' . $payload;
+        
+            // Gerando a assinatura usando SHA-256.
+            $generated_signature = hash('sha256', $data_to_sign);
+            
+            // Compare a assinatura gerada com a assinatura recebida.
+            if (hash_equals($generated_signature, $received_signature)) {        
+                $body = json_decode($payload);
+                $order = llms_get_order_by_key('#' . $body->reference_id);
+                $result = $body->status;
+        
+                try {
+                    $recurrency = $order->is_recurring();
+                    Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway::order_set_status($order, $result, $recurrency);
+        
+                    return $result;
+                } catch (Exception $e) {
+                    // Registre o erro e retorne a mensagem de erro.
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                    return $e->getMessage();
+                }
+            } else {
+                // Assinatura inválida, descarte o evento.
+                return __('Invalid signature. Event discarded.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
             }
         }
 
