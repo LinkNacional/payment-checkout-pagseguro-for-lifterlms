@@ -80,8 +80,8 @@ msgstr "Esse gateway não pode processar transações menores que R$ 5,00."
 msgid "PagSeguro (v1)"
 msgstr "PagSeguro (v1)"
 
-msgid "Allow customers to purchase courses and memberships using PagSeguro."
-msgstr "Permite que clientes comprem cursos e assinaturas usando PagSeguro."
+msgid "Allow customers to purchase using PagSeguro."
+msgstr "Permite que clientes comprem usando PagSeguro."
 
 msgid "PagSeguro Checkout"
 msgstr "PagSeguro Checkout"
@@ -94,3 +94,6 @@ msgstr "Ativa novas formas de pagamento ao LifterLMS usando a API v1 da PagSegur
 
 msgid "Invalid signature. Event discarded."
 msgstr "Assinatura inválida. Evento descartado."
+
+msgid "See Logs"
+msgstr "Ver Logs"

@@ -80,7 +80,7 @@ msgstr ""
 msgid "PagSeguro (v1)"
 msgstr ""
 
-msgid "Allow customers to purchase courses and memberships using PagSeguro."
+msgid "Allow customers to purchase using PagSeguro."
 msgstr ""
 
 msgid "PagSeguro Checkout"
@@ -93,4 +93,7 @@ msgid "Enable new payment methods to LifterLMS using PagSeguro API v1."
 msgstr ""
 
 msgid "Invalid signature. Event discarded."
+msgstr ""
+
+msgid "See Logs"
 msgstr ""

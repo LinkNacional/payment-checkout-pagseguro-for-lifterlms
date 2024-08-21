@@ -352,14 +352,14 @@ HTML;
 
             // Make the request.
             $requestResponse = json_decode($this->pagseguro_request($body, $dataHeader, "/checkouts"), true);
-            $message = empty($requestResponse['error_messages'])? null: array($requestResponse["error_messages"]["error"]);
+            $message = empty($requestResponse['error_messages'])? null: $requestResponse["error_messages"][0]['description'];
             // Log request error if not success.
             if (($message) ) {
                 if ('yes' === $configs['logEnabled']) {
                     llms_log( 'PagSeguro Gateway `handle_pending_order()` ended with api request errors', 'PagSeguro - Gateway');
                 }
 
-                return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message[0], 'error' );
+                return llms_add_notice( 'PagSeguro API Error - Operation rejected, reason: ' . $message, 'error' );
             }
             // If request is success, save the important data for further use in payment area.
             if (isset($requestResponse)) {
@@ -613,7 +613,7 @@ HTML;
              *
              * @var string
              */
-            $this->admin_description = __( 'Allow customers to purchase courses and memberships using PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $this->admin_description = __( 'Allow customers to purchase using PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
 
             /*
              * The title of the gateway.
