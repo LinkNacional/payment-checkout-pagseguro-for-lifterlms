@@ -20,7 +20,7 @@
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
  * @link       https://www.linknacional.com.br/
- * @since      1.0.0
+ * @since      2.0.0
  *
  * @package    Payment_Checkout_Pagseguro_For_Lifterlms
  */

@@ -2,14 +2,14 @@
 
 /**
  * @see        https://www.linknacional.com/
- * @since      1.0.0
+ * @since      2.0.0
  * @author     Link Nacional
  */
 final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Show plugin dependency notice.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     final public static function verify_plugin_dependencies(): bool {
         // Load plugin helper functions.
@@ -48,7 +48,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         if ($is_deactivate_plugin) {
             deactivate_plugins(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME);
 
-            if (isset($_GET['activate'])) {
+            if (wp_verify_nonce(isset($_GET['activate']))) {
                 unset($_GET['activate']);
             }
 
@@ -58,10 +58,24 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         return true;
     }
 
+    public static function register_lkn_give_cielo_qr_code_check_payment_cron_actions(): void {
+        // Obter todos os ganchos cron agendados
+        $cron_array = _get_cron_array();
+        // Iterar sobre os ganchos cron
+        foreach ($cron_array as $hook => $events) {
+            // Verificar se o gancho cron começa com o prefixo desejado
+            foreach ($events as $event => $even) {
+                if (strpos($event, 'payment_checkout_pagseguro_for_lifterlms_check_payment_') === 0) {
+                    add_action($event, array('Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Gateway', 'check_payment'), 10, 2);
+                }
+            }
+        }
+    }
+
     /**
      * Notice for lifterLMS dependecy.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     final public static function dependency_notice(): void {
         // Admin notice.
@@ -82,7 +96,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Notice for No Core Activation.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      */
     final public static function inactive_notice(): void {
         // Admin notice.
@@ -109,7 +123,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Plugin row meta links.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      *
      * @param array $plugin_meta An array of the plugin's metadata.
      * @param string $plugin_file Path to the plugin file, relative to the plugins directory.
@@ -129,7 +143,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Returns an instance of an gateway.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      *
      * @param string $gateway_id
      *
@@ -142,7 +156,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
     /**
      * Array for pick the data of the gateways settings in LifterLMS.
      *
-     * @since 1.0.0
+     * @since 2.0.0
      *
      * @return array $configs
      */
@@ -158,11 +172,11 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         $configs['env'] = get_option('llms_gateway_pagseguro-v1_env_type', 'sandbox');
 
         if ('production' === $configs['env']) {
-            $configs['urlQuery'] = 'https://pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.pagseguro.uol.com.br/';
+            $configs['urlQuery'] = 'https://api.pagseguro.com';
+            $configs['urlPost'] = '	https://api.pagseguro.com';
         } else {
-            $configs['urlQuery'] = 'https://sandbox.pagseguro.uol.com.br/';
-            $configs['urlPost'] = 'https://ws.sandbox.pagseguro.uol.com.br/';
+            $configs['urlQuery'] = 'https://sandbox.api.pagseguro.com';
+            $configs['urlPost'] = 'https://sandbox.api.pagseguro.com';
         }
 
         return $configs;
