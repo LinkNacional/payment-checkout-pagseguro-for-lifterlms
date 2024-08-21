@@ -103,7 +103,7 @@ HTML;
                     $pagseguroObjOrder = llms_get_order_by_key('#' . $orderId);
 
                     // Getting URL for PagSeguro Checkout.
-                    $urlPagseguroCheckout = $pagseguroObjOrder->pagcheckout_url;
+                    $urlPagseguroCheckout = $pagseguroObjOrder->get('pagcheckout_url');
 
                     $title = esc_html__('Payment Area', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
                     $span = esc_html__('Secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
@@ -338,7 +338,7 @@ HTML;
                     'installments' => 1, // If subsequent is string
                 ),
                 "redirect_url" => $returnUrl,
-                "notification_urls" => array($returnUrl.'/wp-json/lkn-lifter-pagseguro-listener/v1/notification')
+                "notification_urls" => array($returnUrl.'/wp-json/lknLifterPagseguro/v1/listener')
             );
             // Header
             $dataHeader = array(
@@ -466,10 +466,10 @@ HTML;
             $generated_signature = hash('sha256', $data_to_sign);
             
             // Compare a assinatura gerada com a assinatura recebida.
-            if (hash_equals($generated_signature, $received_signature)) {        
+            if ($received_signature !== null && hash_equals($generated_signature, $received_signature)) {        
                 $body = json_decode($payload);
                 $order = llms_get_order_by_key('#' . $body->reference_id);
-                $result = $body->status;
+                $result = $body->charges[0]->status;
         
                 try {
                     $recurrency = $order->is_recurring();
