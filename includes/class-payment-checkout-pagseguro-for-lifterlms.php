@@ -164,6 +164,18 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         ));
     }
 
+    public function updater_init() {
+        if (class_exists('Lkn_Puc_Plugin_UpdateChecker')) {
+            return new Lkn_Puc_Plugin_UpdateChecker(
+                'https://api.linknacional.com.br/v2/u/?slug=payment-checkout-pagseguro-for-lifterlms',
+                LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE,
+                LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG
+            );
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Register all of the hooks related to the admin area functionality
      * of the plugin.
@@ -173,6 +185,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      */
     private function define_admin_hooks(): void {
         $this->loader->add_filter('plugin_action_links_' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME, 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'add_plugin_row_meta', 10, 2);
+        $this->loader->add_action('init', $this, 'updater_init');
         $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999);
     }
 
