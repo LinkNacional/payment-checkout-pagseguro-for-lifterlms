@@ -22,6 +22,7 @@
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       payment-checkout-pagseguro-for-lifterlms
+ * Requires Plugins:  lifterlms
  * Domain Path:       /languages
  */
 

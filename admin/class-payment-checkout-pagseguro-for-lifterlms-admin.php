@@ -59,37 +59,37 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
         // Field for Payment instructions.
         $fields[] = array(
             'id' => $gateway->get_option_name( 'payment_instructions' ),
-            'desc' => '<br>' . __( 'Displayed to the user when this gateway is selected during checkout. Add information here instructing the student on how to send payment.', 'lifterlms' ),
-            'title' => __( 'Payment Instructions', 'lifterlms' ),
+            'desc' => '<br>' . __( 'Displayed to the user when this gateway is selected during checkout. Add information here instructing the student on how to send payment.', 'payment-checkout-pagseguro-for-lifterlms' ),
+            'title' => __( 'Payment Instructions', 'payment-checkout-pagseguro-for-lifterlms' ),
             'type' => 'textarea',
         );
     
         // Field for PagSeguro email.
         $fields[] = array(
             'id' => $gateway->get_option_name( 'email' ),
-            'title' => __( 'E-mail of PagSeguro', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
-            'desc' => '<br>' . __( 'E-mail registred in the administrative area of PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'title' => __( 'E-mail of PagSeguro', 'payment-checkout-pagseguro-for-lifterlms' ),
+            'desc' => '<br>' . __( 'E-mail registred in the administrative area of PagSeguro.', 'payment-checkout-pagseguro-for-lifterlms' ),
             'type' => 'text',
         );
     
         // Field for PagSeguro env type.
         $fields[] = array(
             'id' => $gateway->get_option_name( 'env_type' ),
-            'title' => __( 'Type of environment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
-            'desc' => '<br>' . __('Enable environment of test or production.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            'title' => __( 'Type of environment', 'payment-checkout-pagseguro-for-lifterlms' ),
+            'desc' => '<br>' . __('Enable environment of test or production.', 'payment-checkout-pagseguro-for-lifterlms'),
             'type' => 'radio',
             'default' => 'sandbox',
             'options' => array(
-                'sandbox' => __('Sandbox', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
-                'production' => __('Production', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+                'sandbox' => __('Sandbox', 'payment-checkout-pagseguro-for-lifterlms'),
+                'production' => __('Production', 'payment-checkout-pagseguro-for-lifterlms'),
             ),
         );
         
         // Field for PagSeguro token key.
         $fields[] = array(
             'id' => $gateway->get_option_name( 'token_key' ),
-            'title' => __( 'PagSeguro Token', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
-            'desc' => '<br>' . __( 'API service key of PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'title' => __( 'PagSeguro Token', 'payment-checkout-pagseguro-for-lifterlms' ),
+            'desc' => '<br>' . __( 'API service key of PagSeguro.', 'payment-checkout-pagseguro-for-lifterlms' ),
             'type' => 'password',
         );
     
@@ -99,7 +99,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
     
         wp_enqueue_script( 'lknPaymentCheckoutPagseguroForLifterlmsSettingsJs', plugin_dir_url( __FILE__ ) . 'js/payment-checkout-pagseguro-for-lifterlms-admin-settings.js', array(), 'all' ); 
         wp_localize_script( 'lknPaymentCheckoutPagseguroForLifterlmsSettingsJs', 'lknPaymentCheckoutPagseguroForLifterlmsPhpVariables', array(
-            'seeLogs' => __('See logs', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ),
+            'seeLogs' => __('See logs', 'payment-checkout-pagseguro-for-lifterlms' ),
         ));
         return $default_fields;
     }

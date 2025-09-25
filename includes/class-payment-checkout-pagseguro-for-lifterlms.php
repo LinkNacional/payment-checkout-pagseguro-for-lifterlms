@@ -62,7 +62,6 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         $this->plugin_name = 'payment-checkout-pagseguro-for-lifterlms';
 
         $this->load_dependencies();
-        $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
     }
@@ -73,7 +72,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      * Include the following files that make up the plugin:
      *
      * - Payment_Checkout_Pagseguro_For_Lifterlms_Loader. Orchestrates the hooks of the plugin.
-     * - Payment_Checkout_Pagseguro_For_Lifterlms_i18n. Defines internationalization functionality.
+     * - . Defines internationalization functionality.
      * - Payment_Checkout_Pagseguro_For_Lifterlms_Admin. Defines all hooks for the admin area.
      * - Payment_Checkout_Pagseguro_For_Lifterlms_Public. Defines all hooks for the public side of the site.
      *
@@ -89,12 +88,6 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
          * core plugin.
          */
         require_once plugin_dir_path( __DIR__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-loader.php';
-
-        /**
-         * The class responsible for defining internationalization functionality
-         * of the plugin.
-         */
-        require_once plugin_dir_path( __DIR__ ) . 'includes/class-payment-checkout-pagseguro-for-lifterlms-i18n.php';
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
@@ -117,27 +110,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
          */
         require_once plugin_dir_path( __DIR__ ) . 'public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php';
 
-        /**
-         * The class responsible for plugin updater checker of plugin.
-         */
-        include_once plugin_dir_path( __DIR__ ) . 'includes/plugin-updater/plugin-update-checker.php';
-
         $this->loader = new Payment_Checkout_Pagseguro_For_Lifterlms_Loader();
-    }
-
-    /**
-     * Define the locale for this plugin for internationalization.
-     *
-     * Uses the Payment_Checkout_Pagseguro_For_Lifterlms_i18n class in order to set the domain and to register the hook
-     * with WordPress.
-     *
-     * @since    2.0.0
-     * @access   private
-     */
-    private function set_locale(): void {
-        $plugin_i18n = new Payment_Checkout_Pagseguro_For_Lifterlms_i18n();
-
-        $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
     }
 
     /**
@@ -164,18 +137,6 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
         ));
     }
 
-    public function updater_init() {
-        if (class_exists('Lkn_Puc_Plugin_UpdateChecker')) {
-            return new Lkn_Puc_Plugin_UpdateChecker(
-                'https://api.linknacional.com/v2/u/?slug=payment-checkout-pagseguro-for-lifterlms',
-                LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_FILE,
-                LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG
-            );
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Register all of the hooks related to the admin area functionality
      * of the plugin.
@@ -185,7 +146,6 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms {
      */
     private function define_admin_hooks(): void {
         $this->loader->add_filter('plugin_action_links_' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME, 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'add_plugin_row_meta', 10, 2);
-        $this->loader->add_action('init', $this, 'updater_init');
         $this->loader->add_action('plugins_loaded', 'Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper', 'verify_plugin_dependencies', 999);
     }
 

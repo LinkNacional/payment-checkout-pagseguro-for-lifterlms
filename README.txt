@@ -3,7 +3,7 @@ Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: lifterlms, pagseguro, pagbank, credit, debit, slip
 Requires at least: 5.5
-Tested up to: 6.6
+Tested up to: 6.8
 Stable tag: 2.0.0
 Requires PHP: 7.2
 License: GPLv3 or later
