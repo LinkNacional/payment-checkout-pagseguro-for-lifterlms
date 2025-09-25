@@ -51,19 +51,15 @@ if (class_exists('LLMS_Payment_Gateway')) {
             $configs = Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper::get_configs();
 
             // Get Payment Instruction value.
-            $paymentInstruction = esc_html__($configs['paymentInstruction']);
+            $paymentInstruction = esc_html( $configs['paymentInstruction'] );
 
-            $payInstTitle = esc_html__( 'Payment Instructions', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $payInstTitle = esc_html__( 'Payment Instructions', 'payment-checkout-pagseguro-for-lifterlms' );
 
             // Make the HTML for present the Payment Instructions.
-            $paymentInst = <<<HTML
-            <div class="llms-notice llms-info">
-                <h3>
-                {$payInstTitle}
-                </h3>
-                {$paymentInstruction}
-            </div>
-HTML;
+            $paymentInst = '<div class="llms-notice llms-info">';
+            $paymentInst .= '<h3>' . $payInstTitle . '</h3>';
+            $paymentInst .= $paymentInstruction;
+            $paymentInst .= '</div>';
 
             // Below is the verification of payment of the order, to present or not the Instructions.
             global $wp;
@@ -75,7 +71,7 @@ HTML;
                     $order->get( 'payment_gateway' ) === $this->id
                     && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                 ) {
-                    echo apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id );
+                    echo wp_kses_post( apply_filters( 'llms_get_payment_instructions', $paymentInst, $this->id ) );
                 }
             }
         }
@@ -105,33 +101,35 @@ HTML;
                     // Getting URL for PagSeguro Checkout.
                     $urlPagseguroCheckout = $pagseguroObjOrder->get('pagcheckout_url');
 
-                    $title = esc_html__('Payment Area', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
-                    $span = esc_html__('Secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $title = esc_html__('Payment Area', 'payment-checkout-pagseguro-for-lifterlms');
+                    $span = esc_html__('Secure payment by SSL encryption.', 'payment-checkout-pagseguro-for-lifterlms');
 
-                    $buttonTitle = esc_html__('Pay', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
-                    $buttonDesc = esc_html__('PagSeguro Checkout Payment', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $buttonTitle = esc_html__('Pay', 'payment-checkout-pagseguro-for-lifterlms');
+                    $buttonDesc = esc_html__('PagSeguro Checkout Payment', 'payment-checkout-pagseguro-for-lifterlms');
 
-                    $imgAlt = esc_html__('PagSeguro payment methods logos', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
-                    $imgTitle = esc_html__('This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $imgAlt = esc_html__('PagSeguro payment methods logos', 'payment-checkout-pagseguro-for-lifterlms');
+                    $imgTitle = esc_html__('This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip.', 'payment-checkout-pagseguro-for-lifterlms');
 
-                    $descript = esc_html__('Pay with PagSeguro by clicking on button &ldquo;Pay&rdquo; right below', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                    $descript = esc_html__('Pay with PagSeguro by clicking on button &ldquo;Pay&rdquo; right below', 'payment-checkout-pagseguro-for-lifterlms');
+
+                    // Escape URL and attributes for security
+                    $urlPagseguroCheckout = esc_url( $urlPagseguroCheckout );
+                    $imgAlt = esc_attr( $imgAlt );
+                    $imgTitle = esc_attr( $imgTitle );
+                    $buttonDesc = esc_attr( $buttonDesc );
 
                     // Make the HTML for present the Payment Area.
-                    $paymentArea = <<<HTML
-                    <h2>{$title}</h2>
-                    <div class="lkn_pagseguro_payment_area">
-                        <div id="lkn_secure_site_wrapper">
-                            <!-- Padlock HTML code (LifterLMS don't have one icons library) -->
-                            &#128274;
-                            <span>
-                                {$span}
-                            </span>
-                        </div>
-                        <img class="lifter_logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="{$imgAlt}" title="{$imgTitle}">
-                        <p id="text_desc_pagseguro"><b>{$descript}</b></p>
-                        <a id="lkn_pagseguro_pay" href="{$urlPagseguroCheckout}" target="_blank"><button id="lkn_pagseguro_pay_button" title="{$buttonDesc}">{$buttonTitle}</button></a>
-                    </div>
-HTML;
+                    $paymentArea = '<h2>' . $title . '</h2>';
+                    $paymentArea .= '<div class="lkn_pagseguro_payment_area">';
+                    $paymentArea .= '<div id="lkn_secure_site_wrapper">';
+                    $paymentArea .= '<!-- Padlock HTML code (LifterLMS don\'t have one icons library) -->';
+                    $paymentArea .= '&#128274;';
+                    $paymentArea .= '<span>' . $span . '</span>';
+                    $paymentArea .= '</div>';
+                    $paymentArea .= '<img class="lifter_logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="' . $imgAlt . '" title="' . $imgTitle . '">';
+                    $paymentArea .= '<p id="text_desc_pagseguro"><b>' . $descript . '</b></p>';
+                    $paymentArea .= '<a id="lkn_pagseguro_pay" href="' . $urlPagseguroCheckout . '" target="_blank"><button id="lkn_pagseguro_pay_button" title="' . $buttonDesc . '">' . $buttonTitle . '</button></a>';
+                    $paymentArea .= '</div>';
 
                     // Below is the verification of payment of the order, to present or not the Payment Area.
                     global $wp;
@@ -143,7 +141,7 @@ HTML;
                             $order->get( 'payment_gateway' ) === $this->id
                             && in_array( $order->get( 'status' ), array('llms-pending', 'llms-on-hold', true), true )
                         ) {
-                            echo apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id );
+                            echo wp_kses_post( apply_filters( 'llms_get_payment_instructions', $paymentArea, $this->id ) );
                         }
                     }
                 }
@@ -185,7 +183,8 @@ HTML;
                 }
             }
 
-            $order->add_note( sprintf( __( 'Payment method switched from "%1$s" to "%2$s"', 'lifterlms' ), $previous_gateway, $this->get_admin_title() ) );
+            /* translators: %1$s: Previous payment gateway name, %2$s: New payment gateway name */
+            $order->add_note( sprintf( __( 'Payment method switched from "%1$s" to "%2$s"', 'payment-checkout-pagseguro-for-lifterlms' ), $previous_gateway, $this->get_admin_title() ) );
         }
 
         /**
@@ -214,7 +213,7 @@ HTML;
                     $this->log( 'PagSeguro Gateway `handle_pending_order()` ended with validation errors' );
                 }
 
-                return llms_add_notice( __('Not secure payment by SSL encryption.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG), 'error' );
+                return llms_add_notice( __('Not secure payment by SSL encryption.', 'payment-checkout-pagseguro-for-lifterlms'), 'error' );
             }
 
             $total = $order->get_price( 'total', array(), 'float' );
@@ -225,7 +224,7 @@ HTML;
                     $this->log( 'PagSeguro Gateway `handle_pending_order()` ended with validation errors', 'Less than minimum order amount.' );
                 }
 
-                return llms_add_notice( __( 'This gateway cannot process transactions for less than R$ 5,00.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG ), 'error' );
+                return llms_add_notice( __( 'This gateway cannot process transactions for less than R$ 5,00.', 'payment-checkout-pagseguro-for-lifterlms' ), 'error' );
             }
 
             // Free orders (no payment is due).
@@ -241,7 +240,7 @@ HTML;
                     $order->record_transaction(
                         array(
                             'amount' => (float) 0,
-                            'source_description' => __( 'Free', 'lifterlms' ),
+                            'source_description' => __( 'Free', 'payment-checkout-pagseguro-for-lifterlms' ),
                             'transaction_id' => uniqid(),
                             'status' => 'llms-txn-succeeded',
                             'payment_gateway' => 'pagseguro-v1',
@@ -478,12 +477,12 @@ HTML;
                     return $result;
                 } catch (Exception $e) {
                     // Registre o erro e retorne a mensagem de erro.
-                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . var_export($e, true) . \PHP_EOL, 'PagSeguro - Gateway Listener');
+                    llms_log('Date: ' . gmdate('d M Y H:i:s') . ' PagSeguro gateway listener error: ' . $e->getMessage() . \PHP_EOL, 'PagSeguro - Gateway Listener');
                     return $e->getMessage();
                 }
             } else {
                 // Assinatura inválida, descarte o evento.
-                return __('Invalid signature. Event discarded.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG);
+                return __('Invalid signature. Event discarded.', 'payment-checkout-pagseguro-for-lifterlms');
             }
         }
 
@@ -542,7 +541,7 @@ HTML;
             $order->record_transaction(
                 array(
                     'amount' => $order->get_price( 'total', array(), 'float' ),
-                    'source_description' => __( $description, 'lifterlms' ),
+                    'source_description' => esc_html( $description ),
                     'transaction_id' => uniqid(),
                     'status' => 'llms-txn-succeeded',
                     'payment_gateway' => $order->get_gateway(),
@@ -606,28 +605,28 @@ HTML;
              *
              * @var string
              */
-            $this->admin_title = __( 'PagSeguro (v1)', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $this->admin_title = __( 'PagSeguro (v1)', 'payment-checkout-pagseguro-for-lifterlms' );
 
             /*
              * The description of the gateway displayed in admin panel on settings screens.
              *
              * @var string
              */
-            $this->admin_description = __( 'Allow customers to purchase using PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $this->admin_description = __( 'Allow customers to purchase using PagSeguro.', 'payment-checkout-pagseguro-for-lifterlms' );
 
             /*
              * The title of the gateway.
              *
              * @var string
              */
-            $this->title = __( 'PagSeguro Checkout', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $this->title = __( 'PagSeguro Checkout', 'payment-checkout-pagseguro-for-lifterlms' );
 
             /*
              * The description of the gateway displayed to users.
              *
              * @var string
              */
-            $this->description = __( 'Payment via PagSeguro checkout', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG );
+            $this->description = __( 'Payment via PagSeguro checkout', 'payment-checkout-pagseguro-for-lifterlms' );
 
             $this->supports = array(
                 'checkout_fields' => true,

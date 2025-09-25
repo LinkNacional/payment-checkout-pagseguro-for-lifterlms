@@ -1,3 +1,6 @@
+# 2.0.1 - 25/09/2024
+* Fix plugin checker issues.
+
 # 2.0.0 - 22/08/2024
 * Verify order status dinamically;
 * Bringing the PagSeguro API to the new version.

@@ -48,8 +48,11 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         if ($is_deactivate_plugin) {
             deactivate_plugins(LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_BASENAME);
 
-            if (wp_verify_nonce(isset($_GET['activate']))) {
-                unset($_GET['activate']);
+            // Clean up activation parameter if it exists
+            if (isset($_GET['activate'])) {
+                $redirect_url = remove_query_arg('activate');
+                wp_redirect($redirect_url);
+                exit;
             }
 
             return false;
@@ -81,16 +84,16 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a>  %5$s %6$s+ %7$s</p></div>',
-            __('Activation Error:', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
-            __('You must have', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            __('Activation Error:', 'payment-checkout-pagseguro-for-lifterlms'),
+            __('You must have', 'payment-checkout-pagseguro-for-lifterlms'),
             'https://lifterlms.com',
-            __('LifterLMS', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
-            __('version', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            __('LifterLMS', 'payment-checkout-pagseguro-for-lifterlms'),
+            __('version', 'payment-checkout-pagseguro-for-lifterlms'),
             LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION,
-            __('for the LifterLMS PagSeguro to activate.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
+            __('for the LifterLMS PagSeguro to activate.', 'payment-checkout-pagseguro-for-lifterlms')
         );
 
-        echo $message;
+        echo wp_kses_post( $message );
     }
 
     /**
@@ -102,14 +105,14 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         // Admin notice.
         $message = sprintf(
             '<div class="notice notice-error"><p><strong>%1$s</strong> %2$s <a href="%3$s" target="_blank">%4$s</a> %5$s</p></div>',
-            __('Activation Error:', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
-            __('You must have', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
+            __('Activation Error:', 'payment-checkout-pagseguro-for-lifterlms'),
+            __('You must have', 'payment-checkout-pagseguro-for-lifterlms'),
             'https://lifterlms.com',
-            __('LifterLMS', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG),
-            __('plugin installed and activated for the LifterLMS PagSeguro.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
+            __('LifterLMS', 'payment-checkout-pagseguro-for-lifterlms'),
+            __('plugin installed and activated for the LifterLMS PagSeguro.', 'payment-checkout-pagseguro-for-lifterlms')
         );
 
-        echo $message;
+        echo wp_kses_post( $message );
     }
 
     final public static function dependency_alert(): void {
@@ -134,7 +137,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
         $new_meta_links['setting'] = sprintf(
             '<a href="%1$s">%2$s</a>',
             admin_url('admin.php?page=llms-settings&tab=checkout&section=pagseguro-v1'),
-            __('Settings', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG)
+            __('Settings', 'payment-checkout-pagseguro-for-lifterlms')
         );
 
         return array_merge($plugin_meta, $new_meta_links);
@@ -165,7 +168,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
 
         $configs['logEnabled'] = get_option('llms_gateway_pagseguro-v1_logging_enabled', 'no');
 
-        $configs['paymentInstruction'] = get_option('llms_gateway_pagseguro-v1_payment_instructions', __('Check the payment area below.', LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_SLUG));
+        $configs['paymentInstruction'] = get_option('llms_gateway_pagseguro-v1_payment_instructions', __('Check the payment area below.', 'payment-checkout-pagseguro-for-lifterlms'));
         $configs['lknLicense'] = get_option('llms_gateway_pagseguro-v1_plugin_license');
         $configs['email'] = get_option('llms_gateway_pagseguro-v1_email');
         $configs['tokenKey'] = get_option('llms_gateway_pagseguro-v1_token_key');

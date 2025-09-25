@@ -16,12 +16,13 @@
  * Plugin Name:       Payment Gateway PagSeguro for LifterLMS
  * Plugin URI:        https://www.linknacional.com.br/wordpress/plugins/
  * Description:       Enable new payment methods to LifterLMS using PagSeguro API v1.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Link Nacional
  * Author URI:        https://www.linknacional.com.br/
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       payment-checkout-pagseguro-for-lifterlms
+ * Requires Plugins:  lifterlms
  * Domain Path:       /languages
  */
 
@@ -35,7 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 2.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '2.0.0' );
+define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION', '2.0.1' );
 
 define( 'LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_MIN_LIFTERLMS_VERSION', '7.2.0' );
 
