@@ -176,7 +176,7 @@ final class Lkn_Payment_Checkout_Pagseguro_For_Lifterlms_Helper {
 
         if ('production' === $configs['env']) {
             $configs['urlQuery'] = 'https://api.pagseguro.com';
-            $configs['urlPost'] = '	https://api.pagseguro.com';
+            $configs['urlPost'] = 'https://api.pagseguro.com';
         } else {
             $configs['urlQuery'] = 'https://sandbox.api.pagseguro.com';
             $configs['urlPost'] = 'https://sandbox.api.pagseguro.com';

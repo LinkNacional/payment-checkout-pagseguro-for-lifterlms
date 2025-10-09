@@ -126,7 +126,7 @@ if (class_exists('LLMS_Payment_Gateway')) {
                     $paymentArea .= '&#128274;';
                     $paymentArea .= '<span>' . $span . '</span>';
                     $paymentArea .= '</div>';
-                    $paymentArea .= '<img class="lifter_logo_pagseguro" src="//assets.pagseguro.com.br/ps-integration-assets/banners/pagamento/todos_animado_125_150.gif" alt="' . $imgAlt . '" title="' . $imgTitle . '">';
+                    $paymentArea .= '<img class="lifter_logo_pagseguro" src="' . LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_URL . 'public/images/pagseguro-logo.gif" alt="' . $imgAlt . '" title="' . $imgTitle . '">';
                     $paymentArea .= '<p id="text_desc_pagseguro"><b>' . $descript . '</b></p>';
                     $paymentArea .= '<a id="lkn_pagseguro_pay" href="' . $urlPagseguroCheckout . '" target="_blank"><button id="lkn_pagseguro_pay_button" title="' . $buttonDesc . '">' . $buttonTitle . '</button></a>';
                     $paymentArea .= '</div>';
