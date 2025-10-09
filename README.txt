@@ -1,10 +1,10 @@
 === Payment Checkout PagSeguro for LifterLMS ===
 Contributors: linknacional
 Donate link: https://www.linknacional.com/wordpress/plugins/
-Tags: lifterlms, pagseguro, pagbank, credit, debit, slip
+Tags: lifterlms, pagseguro, pagbank, credit, debit
 Requires at least: 5.5
 Tested up to: 6.8
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -74,6 +74,22 @@ Your PagSeguro payment gateway is now configured and ready to accept payments fo
 
 After completing these steps, the Payment Checkout PagSeguro for LifterLMS is activated and ready to be configured in LifterLMS settings.
 
+== External Services ==
+
+This plugin connects to PagSeguro's payment processing services to handle transactions. This service is required for the plugin's core functionality of processing payments.
+
+**PagSeguro API Integration:**
+- **What it's used for:** Processing credit card payments, bank slips, PIX, and other payment methods supported by PagSeguro
+- **Data sent:** Order information, customer payment details, transaction amounts, and customer information necessary for payment processing
+- **When data is sent:** When customers initiate a payment transaction through the LifterLMS checkout process
+- **Production API:** https://api.pagseguro.com - Used for live transactions
+- **Sandbox API:** https://sandbox.api.pagseguro.com - Used for testing purposes
+
+**Legal Information:**
+- PagSeguro Terms of Service: https://pagseguro.uol.com.br/v3/termos-de-uso-e-politica-de-privacidade/
+- PagSeguro Privacy Policy: https://pagseguro.uol.com.br/sobre/politica-de-privacidade/
+
+All transactions are processed securely through PagSeguro's SSL-encrypted servers. No sensitive payment information is stored on your WordPress site.
 
 == Frequently Asked Questions ==
 
@@ -91,7 +107,11 @@ This plugin is released under GPL v3 or later license.
 1. Nothing;
 
 == Changelog ==
-= 2.0.1 =
+= 2.0.3 =
+**09/10/2024**
+* Fix plugin wordpress issues.
+
+= 2.0.2 =
 **03/10/2024**
 * Fix plugin wordpress issues.
 

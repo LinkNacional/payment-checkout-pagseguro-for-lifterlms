@@ -1,3 +1,6 @@
+# 2.0.3 - 09/10/2024
+* Fix plugin wordpress issues.
+
 # 2.0.2 - 03/10/2024
 * Fix plugin wordpress issues.
 
