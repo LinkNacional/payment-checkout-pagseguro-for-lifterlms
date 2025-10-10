@@ -31,6 +31,8 @@ jobs:
           trademarked_term
           textdomain_mismatch
           hidden_files
+          file_type
+          WordPress.WP.EnqueuedResourceParameters.MissingVersion
         categories: |
           performance
           accessibility
