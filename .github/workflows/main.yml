@@ -28,11 +28,16 @@ jobs:
           WordPress.DB.SlowDBQuery.slow_db_query_meta_key
           WordPress.DB.SlowDBQuery.slow_db_query_meta_value
           WordPress.PHP.DevelopmentFunctions.error_log_var_export
+          WordPress.WP.EnqueuedResourceParameters.MissingVersion
+          WordPress.WP.EnqueuedResourceParameters.NoExplicitVersion
+          WordPress.Files.FileName.InvalidClassFileName
+          WordPress.Files.FileName.NotHyphenatedLowercase
           trademarked_term
           textdomain_mismatch
           hidden_files
           file_type
-          WordPress.WP.EnqueuedResourceParameters.MissingVersion
+          invalid_file_name
+          enqueued_resources_in_footer
         categories: |
           performance
           accessibility
@@ -55,15 +60,6 @@ jobs:
         filename: "${{ env.PLUGIN_NAME }}.zip"
         exclusions: "*.git* /*node_modules/* .editorconfig"
 
-    - name: Archive Release with auto-updater
-      uses: thedoctor0/zip-release@master
-      with:
-        type: "zip"
-        path: "${{ env.PLUGIN_NAME_WITH_UPDATER }}"
-        directory: "."
-        filename: "${{ env.PLUGIN_NAME_WITH_UPDATER }}.zip"
-        exclusions: "*.git* /*node_modules/* .editorconfig"
-
     # Update version tag
     - name: Bump version and push tag
       id: tag_version
@@ -76,7 +72,7 @@ jobs:
     - name: Generate new Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ env.PLUGIN_NAME }}.zip,${{env.PLUGIN_NAME_WITH_UPDATER}}.zip"
+        artifacts: "${{ env.PLUGIN_NAME }}.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
         commit: "main"
         draft: true
