@@ -7,6 +7,7 @@ on:
 
 env:
   PLUGIN_NAME: payment-checkout-pagseguro-for-lifterlms
+  PHP_VERSION: "7.4"
 
 jobs:
   release-build:
