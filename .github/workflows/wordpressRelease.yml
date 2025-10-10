@@ -17,15 +17,6 @@ jobs:
         with:
           ref: main
 
-      - name: Run composer install
-        uses: php-actions/composer@v6
-        with:
-          php_version: ${{ env.PHP_VERSION }}
-          working_dir: "."
-          args: --ignore-platform-reqs
-          command: install
-          dev: no
-
       - name: Prepare plugin folder
         run: |
           mkdir -p build/${{ env.PLUGIN_NAME }}
