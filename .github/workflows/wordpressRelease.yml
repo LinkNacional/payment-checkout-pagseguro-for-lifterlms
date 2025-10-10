@@ -21,7 +21,6 @@ jobs:
         run: |
           mkdir -p build/${{ env.PLUGIN_NAME }}
           mv ./admin ./includes ./languages ./public *.php *.txt ./build/${{ env.PLUGIN_NAME }}
-          cp -r vendor build/${{ env.PLUGIN_NAME }}/vendor
           find ./build -type f -exec chmod 0644 {} +
           find ./build -type d -exec chmod 0755 {} +
 
