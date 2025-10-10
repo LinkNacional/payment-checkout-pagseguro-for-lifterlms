@@ -1,3 +1,6 @@
+# 2.0.4 - 10/10/2024
+* Add action for WordPress releases.
+
 # 2.0.3 - 09/10/2024
 * Fix plugin wordpress issues.
 
