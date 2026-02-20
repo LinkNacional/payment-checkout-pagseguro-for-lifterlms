@@ -107,6 +107,10 @@ This plugin is released under GPL v3 or later license.
 1. Nothing;
 
 == Changelog ==
+= 2.0.5 =
+**20/02/2026**
+* Fix Translations
+
 = 2.0.4 =
 **10/10/2024**
 * Add action for WordPress releases.

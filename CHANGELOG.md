@@ -1,4 +1,8 @@
-# 2.0.4 - 10/10/2024
+
+# 2.0.5 - 20/02/2026
+* Fix Translations
+
+# 2.0.4 - 10/10/2025
 * Add action for WordPress releases.
 
 # 2.0.3 - 09/10/2024
