@@ -97,7 +97,7 @@ final class Payment_Checkout_Pagseguro_For_Lifterlms_Admin {
             $default_fields = array_merge($default_fields, $fields);
         }
     
-        wp_enqueue_script( 'lknPaymentCheckoutPagseguroForLifterlmsSettingsJs', plugin_dir_url( __FILE__ ) . 'js/payment-checkout-pagseguro-for-lifterlms-admin-settings.js', array(), '2.0.4', true ); 
+        wp_enqueue_script( 'lknPaymentCheckoutPagseguroForLifterlmsSettingsJs', plugin_dir_url( __FILE__ ) . 'js/payment-checkout-pagseguro-for-lifterlms-admin-settings.js', array(), LKN_PAYMENT_CHECKOUT_PAGSEGURO_FOR_LIFTERLMS_VERSION, true ); 
         wp_localize_script( 'lknPaymentCheckoutPagseguroForLifterlmsSettingsJs', 'lknPaymentCheckoutPagseguroForLifterlmsPhpVariables', array(
             'seeLogs' => __('See logs', 'payment-checkout-pagseguro-for-lifterlms' ),
         ));
