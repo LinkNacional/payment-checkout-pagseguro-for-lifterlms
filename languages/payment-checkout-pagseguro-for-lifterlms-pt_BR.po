@@ -1,99 +1,181 @@
-#: Payment Checkout PagSeguro for LifterLMS tradução pt_BR
-msgid "E-mail of PagSeguro"
-msgstr "E-mail do PagSeguro"
+# Blank WordPress Pot
+# Copyright 2014 ...
+# This file is distributed under the GNU General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: payment-checkout-pagseguro-for-lifterlms\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"POT-Creation-Date: 2026-02-20 10:53-0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Your Team <translations@example.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,"
+"_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-SearchPath-0: .\n"
 
-msgid "E-mail registred in the administrative area of PagSeguro."
-msgstr "E-mail registrado na área administrativa do PagSeguro."
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:62
+msgid ""
+"Displayed to the user when this gateway is selected during checkout. Add "
+"information here instructing the student on how to send payment."
+msgstr ""
+"Exibido ao usuário quando este meio de pagamento é selecionado durante a "
+"finalização da compra. Adicione informações aqui instruindo o aluno sobre "
+"como realizar o pagamento."
 
-msgid "PagSeguro Token"
-msgstr "Token PagSeguro"
-
-msgid "API service key of PagSeguro."
-msgstr "Chave do serviço API do PagSeguro."
-
-msgid "Type of environment"
-msgstr "Tipo de ambiente"
-
-msgid "Enable environment of test or production."
-msgstr "Habilita o ambiente de teste ou produção."
-
-msgid "Sandbox"
-msgstr "Sandbox (teste)"
-
-msgid "Production"
-msgstr "Produção"
-
-msgid "Activation Error:"
-msgstr "Erro de Ativação:"
-
-msgid "You must have"
-msgstr "Você precisa ter o"
-
-msgid "LifterLMS"
-msgstr "LifterLMS"
-
-msgid "version"
-msgstr "versão"
-
-msgid "for the LifterLMS PagSeguro to activate."
-msgstr "para ativar o LifterLMS PagSeguro."
-
-msgid "plugin installed and activated for the LifterLMS PagSeguro."
-msgstr "plugin, instalado e ativado para o LifterLMS PagSeguro."
-
-msgid "Settings"
-msgstr "Configurações"
-
-msgid "Check the payment area below."
-msgstr "Verifique a área de pagamento abaixo."
-
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:63
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:56
 msgid "Payment Instructions"
 msgstr "Instruções de Pagamento"
 
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:70
+msgid "E-mail of PagSeguro"
+msgstr "E-mail do PagSeguro"
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:71
+msgid "E-mail registred in the administrative area of PagSeguro."
+msgstr "E-mail registrado na área administrativa do PagSeguro."
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:78
+msgid "Type of environment"
+msgstr "Tipo de ambiente"
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:79
+msgid "Enable environment of test or production."
+msgstr "Habilitar ambiente de teste ou produção."
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:83
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:84
+msgid "Production"
+msgstr "Produção"
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:91
+msgid "PagSeguro Token"
+msgstr "Token do PagSeguro"
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:92
+msgid "API service key of PagSeguro."
+msgstr "Chave de serviço da API do PagSeguro."
+
+#: admin/class-payment-checkout-pagseguro-for-lifterlms-admin.php:102
+msgid "See logs"
+msgstr "Ver logs"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:87
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:108
+msgid "Activation Error:"
+msgstr "Erro de Ativação:"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:88
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:109
+msgid "You must have"
+msgstr "Você deve ter"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:90
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:111
+msgid "LifterLMS"
+msgstr "LifterLMS"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:91
+msgid "version"
+msgstr "versão"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:93
+msgid "for the LifterLMS PagSeguro to activate."
+msgstr "para que o LifterLMS PagSeguro seja ativado."
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:112
+msgid "plugin installed and activated for the LifterLMS PagSeguro."
+msgstr "plugin instalado e ativado para o LifterLMS PagSeguro."
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:140
+msgid "Settings"
+msgstr "Configurações"
+
+#: includes/class-payment-checkout-pagseguro-for-lifterlms-helper.php:171
+msgid "Check the payment area below."
+msgstr "Verifique a área de pagamento abaixo."
+
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:104
 msgid "Payment Area"
 msgstr "Área de Pagamento"
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:105
 msgid "Secure payment by SSL encryption."
-msgstr "Pagamento seguro por criptografia SSL."
+msgstr ""
+"O Gemini disse\n"
+"Pagamento seguro por criptografia SSL."
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:107
 msgid "Pay"
 msgstr "Pagar"
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:108
 msgid "PagSeguro Checkout Payment"
-msgstr "Pagamento por PagSeguro Checkout"
+msgstr "Pagamento por Checkout PagSeguro"
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:110
 msgid "PagSeguro payment methods logos"
-msgstr "Logotipos de métodos de pagamentos PagSeguro"
+msgstr "Logotipos de métodos de pagamento do PagSeguro"
 
-msgid "This site accepts payments with the most of flags and banks, balance in PagSeguro account and bank slip."
-msgstr "Este site aceita pagamentos com a maioria das bandeiras e bancos, saldo na conta PagSeguro e boleto bancário."
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:111
+msgid ""
+"This site accepts payments with the most of flags and banks, balance in "
+"PagSeguro account and bank slip."
+msgstr ""
+"Este site aceita pagamentos com a maioria das bandeiras e bancos, saldo na "
+"conta PagSeguro e boleto bancário."
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:113
 msgid "Pay with PagSeguro by clicking on button &ldquo;Pay&rdquo; right below"
 msgstr "Pague com PagSeguro clicando no botão &ldquo;Pagar&rdquo; logo abaixo"
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:187
+#, php-format
+msgid "Payment method switched from \"%1$s\" to \"%2$s\""
+msgstr "Método de pagamento alterado de \"%1$s\" para \"%2$s\""
+
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:216
 msgid "Not secure payment by SSL encryption."
 msgstr "Pagamento não seguro por criptografia SSL."
 
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:227
 msgid "This gateway cannot process transactions for less than R$ 5,00."
-msgstr "Esse gateway não pode processar transações menores que R$ 5,00."
+msgstr "Este gateway não pode processar transações por menos de R$ 5,00."
 
-msgid "PagSeguro (v1)"
-msgstr "PagSeguro (v1)"
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:243
+msgid "Free"
+msgstr "Livre"
 
-msgid "Allow customers to purchase using PagSeguro."
-msgstr "Permite que clientes comprem usando PagSeguro."
-
-msgid "PagSeguro Checkout"
-msgstr "PagSeguro Checkout"
-
-msgid "Payment via PagSeguro checkout"
-msgstr "Pagamento via PagSeguro checkout"
-
-msgid "Enable new payment methods to LifterLMS using PagSeguro API v1."
-msgstr "Ativa novas formas de pagamento ao LifterLMS usando a API v1 da PagSeguro."
-
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:485
 msgid "Invalid signature. Event discarded."
 msgstr "Assinatura inválida. Evento descartado."
 
-msgid "See Logs"
-msgstr "Ver Logs"
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:608
+msgid "PagSeguro (v1)"
+msgstr "PagSeguro (v1)"
+
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:615
+msgid "Allow customers to purchase using PagSeguro."
+msgstr "Permitir que clientes comprem usando o PagSeguro."
+
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:622
+msgid "PagSeguro Checkout"
+msgstr "Checkout PagSeguro"
+
+#: public/class-lkn-payment-checkout-pagseguro-for-lifterlms-gateway.php:629
+msgid "Payment via PagSeguro checkout"
+msgstr "Pagamento via checkout PagSeguro"
