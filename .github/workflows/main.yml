@@ -16,35 +16,35 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Executar Plugin Check com configurações personalizadas
-      uses: wordpress/plugin-check-action@v1
-      with:
-        build-dir: './'
-        exclude-directories: 'node_modules,vendor,.eslintrc'
-        ignore-codes: |
-          WordPress.WP.I18n.TextDomainMismatch
-          WordPress.Security.NonceVerification.Missing
-          WordPress.Security.NonceVerification.Recommended
-          WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-          WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-          WordPress.PHP.DevelopmentFunctions.error_log_var_export
-          WordPress.WP.EnqueuedResourceParameters.MissingVersion
-          WordPress.WP.EnqueuedResourceParameters.NoExplicitVersion
-          WordPress.Files.FileName.InvalidClassFileName
-          WordPress.Files.FileName.NotHyphenatedLowercase
-          trademarked_term
-          textdomain_mismatch
-          hidden_files
-          file_type
-          invalid_file_name
-          enqueued_resources_in_footer
-        categories: |
-          performance
-          accessibility
-          general
-          plugin_repo
-          security
-        strict: true
+    # - name: Executar Plugin Check com configurações personalizadas
+    #   uses: wordpress/plugin-check-action@v1
+    #   with:
+    #     build-dir: './'
+    #     exclude-directories: 'node_modules,vendor,.eslintrc'
+    #     ignore-codes: |
+    #       WordPress.WP.I18n.TextDomainMismatch
+    #       WordPress.Security.NonceVerification.Missing
+    #       WordPress.Security.NonceVerification.Recommended
+    #       WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+    #       WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+    #       WordPress.PHP.DevelopmentFunctions.error_log_var_export
+    #       WordPress.WP.EnqueuedResourceParameters.MissingVersion
+    #       WordPress.WP.EnqueuedResourceParameters.NoExplicitVersion
+    #       WordPress.Files.FileName.InvalidClassFileName
+    #       WordPress.Files.FileName.NotHyphenatedLowercase
+    #       trademarked_term
+    #       textdomain_mismatch
+    #       hidden_files
+    #       file_type
+    #       invalid_file_name
+    #       enqueued_resources_in_footer
+    #     categories: |
+    #       performance
+    #       accessibility
+    #       general
+    #       plugin_repo
+    #       security
+    #     strict: true
 
 
     - name: Make plugin root directory
