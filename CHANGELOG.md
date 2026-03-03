@@ -1,3 +1,6 @@
+# 2.0.7 - 03/03/2026
+* Updated plugin images for better clarity and branding in the WordPress directory.
+
 # 2.0.6 - 03/03/2026
 * Updated plugin images for better clarity and branding in the WordPress directory.
 

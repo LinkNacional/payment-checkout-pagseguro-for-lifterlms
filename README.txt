@@ -105,7 +105,7 @@ This plugin is released under GPL v3 or later license.
 == Screenshots ==
 
 == Changelog ==
-= 2.0.6 =
+= 2.0.6/2.0.7 =
 **03/03/2026**
 * Updated plugin images for better clarity and branding in the WordPress directory.
 
@@ -140,7 +140,7 @@ This plugin is released under GPL v3 or later license.
 
 == Upgrade Notice ==
 
-= 2.0.6 =
+= 2.0.6/2.0.7 =
 **03/03/2026**
 * Updated plugin images for better clarity and branding in the WordPress directory.
 
