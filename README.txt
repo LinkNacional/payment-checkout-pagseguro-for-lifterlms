@@ -4,7 +4,7 @@ Donate link: https://www.linknacional.com/wordpress/plugins/
 Tags: lifterlms, pagseguro, pagbank, credit, debit
 Requires at least: 5.5
 Tested up to: 6.9
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 Requires PHP: 7.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -105,7 +105,7 @@ This plugin is released under GPL v3 or later license.
 == Screenshots ==
 
 == Changelog ==
-= 2.0.6 =
+= 2.0.6/2.0.7 =
 **03/03/2026**
 * Updated plugin images for better clarity and branding in the WordPress directory.
 
@@ -140,7 +140,7 @@ This plugin is released under GPL v3 or later license.
 
 == Upgrade Notice ==
 
-= 2.0.6 =
+= 2.0.6/2.0.7 =
 **03/03/2026**
 * Updated plugin images for better clarity and branding in the WordPress directory.
 
