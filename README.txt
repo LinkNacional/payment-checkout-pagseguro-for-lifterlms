@@ -107,6 +107,10 @@ This plugin is released under GPL v3 or later license.
 1. Nothing;
 
 == Changelog ==
+= 2.0.6 =
+**03/03/2026**
+* Updated plugin images for better clarity and branding in the WordPress directory.
+
 = 2.0.5 =
 **20/02/2026**
 * Fix Translations
@@ -137,6 +141,10 @@ This plugin is released under GPL v3 or later license.
 * Plugin launch.
 
 == Upgrade Notice ==
+
+= 2.0.6 =
+**03/03/2026**
+* Updated plugin images for better clarity and branding in the WordPress directory.
 
 = 2.0.0 =
 **22/08/2024**
