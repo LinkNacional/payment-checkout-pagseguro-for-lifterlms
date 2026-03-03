@@ -6,7 +6,7 @@ on:
 env:
   PLUGIN_NAME: payment-checkout-pagseguro-for-lifterlms
   PHP_VERSION: "7.4"
-  DEPLOY_TAG: "2.0.6"
+  DEPLOY_TAG: "2.0.7"
 
 jobs:
   deploy-to-wp:
