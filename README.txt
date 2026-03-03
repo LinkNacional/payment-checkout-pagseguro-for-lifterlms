@@ -104,8 +104,6 @@ This plugin is released under GPL v3 or later license.
 
 == Screenshots ==
 
-1. Nothing;
-
 == Changelog ==
 = 2.0.6 =
 **03/03/2026**
